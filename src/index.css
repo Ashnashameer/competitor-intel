@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-[#fbf9ff] text-slate-900 antialiased font-sans selection:bg-purple-600 selection:text-white;
+  }
+}
+
+/* Editorial High-Contrast Serif (New York Typeface aesthetic) */
+.font-editorial {
+  font-family: "New York", -apple-system-ui-serif, "Bodoni Moda", "Playfair Display", "Cormorant Garamond", Didot, Georgia, serif;
+  font-feature-settings: "kern" 1, "liga" 1;
+  text-rendering: optimizeLegibility;
+}
+
+/* Minimal clean purple scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8f6fc;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d8b4fe;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a855f7;
+}
+
+/* EDGE Instagram Brand Utilities */
+.edge-gradient-text {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600;
+}
+
+.edge-gradient-btn {
+  @apply bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-700 hover:from-violet-700 hover:via-purple-700 hover:to-indigo-800 text-white shadow-sm;
+}
+
+.edge-overline {
+  @apply font-mono text-[9px] tracking-[0.22em] uppercase font-bold text-slate-500;
+}
+
+/* Floating Glass Card Keyframe Animations */
+@keyframes floatSlow {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes floatDelayed {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 5s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: floatDelayed 6s ease-in-out infinite;
+}

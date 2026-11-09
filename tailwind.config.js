@@ -1,0 +1,45 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        edge: {
+          electric: '#7c3aed',
+          bright: '#9333ea',
+          violet: '#6d28d9',
+          deep: '#4c1d95',
+          dark: '#0c0a1a',
+          midnight: '#110d24',
+          darkCard: '#15112b',
+          borderDark: '#261f42',
+          lavender: '#fbf9ff',
+          surface: '#f6f3fc',
+          lilac: '#ede9fe'
+        },
+        myst: {
+          50: '#faf5ff',
+          100: '#f3e8ff',
+          200: '#e9d5ff',
+          300: '#d8b4fe',
+          400: '#c084fc',
+          500: '#a855f7',
+          600: '#9333ea',
+          700: '#7e22ce',
+          800: '#6b21a8',
+          900: '#581c87',
+          950: '#3b0764',
+        }
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+        editorial: ['"New York"', '-apple-system-ui-serif', '"Bodoni Moda"', '"Playfair Display"', '"Cormorant Garamond"', 'Didot', 'serif']
+      }
+    },
+  },
+  plugins: [],
+}
