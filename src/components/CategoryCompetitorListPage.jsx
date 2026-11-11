@@ -450,36 +450,34 @@ export function CategoryCompetitorListPage({
       {/* ========================================================================= */}
       {/* 2. MINIMAL HEADING & VIEW SWITCHER                                        */}
       {/* ========================================================================= */}
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-            {getPageHeading()}
-          </h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            {categoryId === 'schools' 
-              ? `${filteredOrganisations.length} external school partners & curriculum providers in Kerala`
-              : `${filteredOrganisations.length} verified ${filteredOrganisations.length === 1 ? 'competitor' : 'competitors'} in this category`}
-          </p>
-
-          {/* Minimal Verification Status Legend */}
-          {categoryId === 'schools' && (
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 mt-2.5 pt-1 text-[11px] text-slate-600">
-              <div className="flex items-center gap-1.5">
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[9.5px] font-bold tracking-wider uppercase bg-purple-100/90 text-purple-900 border border-purple-200 shadow-2xs">
-                  <CheckCircle2 className="w-2.5 h-2.5 text-purple-700" />
-                  VERIFIED
-                </span>
-                <span className="text-slate-500 font-medium">— Public partnership evidence available</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="inline-flex items-center px-2 py-0.5 rounded text-[9.5px] font-semibold tracking-wider uppercase bg-white text-slate-600 border border-slate-300 shadow-2xs">
-                  NOT PUBLICLY VERIFIED
-                </span>
-                <span className="text-slate-500 font-medium">— School-facing provider, but partnership evidence not publicly established</span>
-              </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        {categoryId !== 'schools' ? (
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+              {getPageHeading()}
+            </h1>
+            <p className="text-xs text-slate-500 mt-0.5">
+              {filteredOrganisations.length} verified {filteredOrganisations.length === 1 ? 'competitor' : 'competitors'} in this category
+            </p>
+          </div>
+        ) : (
+          /* Minimal Verification Status Legend for Schools (Duplicate heading and sentence removed) */
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[11px] text-slate-600 py-0.5">
+            <div className="flex items-center gap-1.5">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[9.5px] font-bold tracking-wider uppercase bg-purple-100/90 text-purple-900 border border-purple-200 shadow-2xs">
+                <CheckCircle2 className="w-2.5 h-2.5 text-purple-700" />
+                VERIFIED
+              </span>
+              <span className="text-slate-500 font-medium">— Public partnership evidence available</span>
             </div>
-          )}
-        </div>
+            <div className="flex items-center gap-1.5">
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-[9.5px] font-semibold tracking-wider uppercase bg-white text-slate-600 border border-slate-300 shadow-2xs">
+                NOT PUBLICLY VERIFIED
+              </span>
+              <span className="text-slate-500 font-medium">— School-facing provider, but partnership evidence not publicly established</span>
+            </div>
+          </div>
+        )}
 
         {/* View Switcher: Card View vs Table View */}
         <div className="flex items-center p-0.5 bg-slate-100 rounded-lg border border-slate-200 shrink-0 self-start sm:self-auto">
@@ -534,9 +532,9 @@ export function CategoryCompetitorListPage({
         </div>
 
         {/* ========================================================================= */}
-        {/* ENTITY TYPE FILTER BAR (PROVIDERS VS INSTITUTIONS)                        */}
+        {/* ENTITY TYPE FILTER BAR (PROVIDERS VS INSTITUTIONS - NON-SCHOOLS ONLY)     */}
         {/* ========================================================================= */}
-        {categoryId !== 'schools' ? (
+        {categoryId !== 'schools' && (
           <div className="pt-2 pb-1 border-t border-slate-150">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div className="flex items-center gap-2">
@@ -581,17 +579,6 @@ export function CategoryCompetitorListPage({
                 </button>
               </div>
             </div>
-          </div>
-        ) : (
-          <div className="pt-2 pb-1 border-t border-slate-150 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-            <div className="flex items-center gap-2 text-slate-700">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-              <span className="font-bold text-slate-900">Curated School Partner Directory:</span>
-              <span className="text-slate-600">Strictly external providers delivering verified in-school programmes & labs</span>
-            </div>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold bg-purple-50 text-purple-700 border border-purple-200 shrink-0 self-start sm:self-auto">
-              <span>{categoryOrganisations.length} External Providers</span>
-            </span>
           </div>
         )}
 
