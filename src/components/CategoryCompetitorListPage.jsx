@@ -1078,21 +1078,21 @@ export function CategoryCompetitorListPage({
             const isSchools = categoryId === 'schools';
             const isVerified = isSchools ? isSchoolPartnerVerified(org) : metrics.isVerified;
 
-            // SCHOOLS CATEGORY: ULTRA-CLEAN, SCANNABLE INDEX CARD (NO INFORMATION OVERLOAD)
+            // SCHOOLS CATEGORY: SCANNABLE INDEX CARD WITH TWO POLISHED VERIFICATION BACKGROUND STATES
             if (isSchools) {
               return (
                 <div
                   key={org.id}
                   onClick={() => onSelectOrg(org)}
-                  className={`group rounded-xl border transition-all duration-200 p-5 flex flex-col justify-between cursor-pointer ${
+                  className={`group rounded-xl border transition-all duration-300 p-5 flex flex-col justify-between cursor-pointer ${
                     isVerified
-                      ? 'bg-[#f8f5fc] border-purple-200/90 hover:border-purple-400 hover:shadow-lg hover:shadow-purple-950/5'
-                      : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-md'
+                      ? 'bg-gradient-to-br from-[#faf7fd] via-[#f7f2fb] to-[#f4edfa] border-[#e5daf5] hover:border-purple-300 shadow-[0_4px_18px_-4px_rgba(147,51,234,0.07)] hover:shadow-[0_8px_25px_-4px_rgba(147,51,234,0.14)] hover:-translate-y-0.5'
+                      : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs hover:shadow-md hover:-translate-y-0.5'
                   }`}
                 >
                   <div>
-                    {/* 1. Company Logo / Initials */}
-                    <div className="mb-3.5">
+                    {/* Top Row: Company Logo / Initials + Verification Badge */}
+                    <div className="flex items-center justify-between gap-2 mb-3.5">
                       <div className={`w-11 h-11 rounded-xl font-bold text-xs flex items-center justify-center shrink-0 shadow-xs border transition-colors ${
                         isVerified
                           ? 'bg-purple-900 text-purple-200 border-purple-800/40 group-hover:bg-purple-700 group-hover:text-white'
@@ -1100,21 +1100,32 @@ export function CategoryCompetitorListPage({
                       }`}>
                         {org.logoText || org.name.substring(0, 2).toUpperCase()}
                       </div>
+
+                      {isVerified ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase bg-purple-100/90 text-purple-900 border border-purple-200/90 shadow-2xs">
+                          <CheckCircle2 className="w-2.5 h-2.5 text-purple-700 shrink-0" />
+                          <span>VERIFIED</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[8.5px] font-semibold tracking-wider uppercase bg-slate-100 text-slate-600 border border-slate-250">
+                          NOT PUBLICLY VERIFIED
+                        </span>
+                      )}
                     </div>
 
-                    {/* 2. Company Name */}
+                    {/* Company Name */}
                     <h3 className="font-bold text-slate-900 text-base group-hover:text-purple-700 transition-colors leading-snug">
                       {org.name}
                     </h3>
 
-                    {/* 3. Location */}
+                    {/* Location */}
                     <p className="text-xs text-slate-500 flex items-center gap-1 mt-1 font-medium">
                       <MapPin className="w-3.5 h-3.5 text-purple-500/70 shrink-0" />
                       <span>{cleanLocation}</span>
                     </p>
 
-                    {/* 4. School Partnerships Metadata & Count */}
-                    <div className="mt-5 pt-4 border-t border-slate-200/60">
+                    {/* School Partnerships Metadata & Count */}
+                    <div className={`mt-5 pt-4 border-t ${isVerified ? 'border-purple-200/60' : 'border-slate-200/60'}`}>
                       <span className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
                         School Partnerships
                       </span>
@@ -1126,7 +1137,7 @@ export function CategoryCompetitorListPage({
                     </div>
                   </div>
 
-                  {/* 5. View Profile Button */}
+                  {/* View Profile Button */}
                   <div className="pt-5 mt-3">
                     <button
                       onClick={(e) => {
