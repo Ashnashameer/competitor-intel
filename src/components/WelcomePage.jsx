@@ -111,27 +111,27 @@ export function WelcomePage({ onExplore }) {
         <div className="max-w-4xl flex flex-col items-start text-left relative z-20">
           
           {/* =====================================================================
-              OVERSIZED TYPOGRAPHIC HERO STATEMENT (THE DESIGNED OBJECT)
+              OVERSIZED TYPOGRAPHIC HERO STATEMENT (HIGH VISIBILITY & PROMINENCE)
               Two clearly separated words: COMPETITOR and INTEL (no period)
               ===================================================================== */}
           <div className="relative mb-6 sm:mb-8 select-text">
             
-            {/* Soft Ambient Diffuse Glow seamlessly blending into the environment (No localized ball) */}
+            {/* Luminous Diffuse Glow / Volumetric Aura for maximum text visibility */}
             <div 
-              className="absolute -inset-10 pointer-events-none opacity-40 blur-[90px]"
+              className="absolute -inset-6 sm:-inset-10 pointer-events-none opacity-80 blur-[70px]"
               style={{
-                background: 'radial-gradient(circle at 40% 50%, rgba(147, 51, 234, 0.35) 0%, rgba(88, 28, 135, 0.15) 50%, transparent 80%)'
+                background: 'radial-gradient(ellipse at 35% 45%, rgba(255, 255, 255, 0.25) 0%, rgba(168, 85, 247, 0.35) 35%, rgba(88, 28, 135, 0.20) 65%, transparent 80%)'
               }}
               aria-hidden="true"
             />
 
             <h1 className="relative font-display text-[28px] xs:text-[36px] sm:text-[54px] md:text-[68px] lg:text-[84px] xl:text-[96px] font-black tracking-[-0.01em] leading-none select-text flex flex-col gap-1.5 sm:gap-2.5 md:gap-3.5">
               
-              {/* Word 1: COMPETITOR (Darker, richer royal purple gradient) */}
+              {/* Word 1: COMPETITOR (High-visibility luminous gradient) */}
               <span 
-                className="block uppercase drop-shadow-[0_4px_30px_rgba(59,7,100,0.70)]"
+                className="block uppercase drop-shadow-[0_0_35px_rgba(168,85,247,0.50)]"
                 style={{
-                  background: 'linear-gradient(180deg, #c084fc 0%, #9333ea 35%, #6b21a8 70%, #3b0764 100%)',
+                  background: 'linear-gradient(180deg, #ffffff 15%, #d8b4fe 45%, #9333ea 85%, #6b21a8 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent'
                 }}
@@ -139,11 +139,11 @@ export function WelcomePage({ onExplore }) {
                 COMPETITOR
               </span>
 
-              {/* Word 2: INTEL (Darker, richer royal purple gradient) */}
+              {/* Word 2: INTEL (High-visibility luminous gradient) */}
               <span 
-                className="block uppercase drop-shadow-[0_4px_30px_rgba(59,7,100,0.70)]"
+                className="block uppercase drop-shadow-[0_0_35px_rgba(168,85,247,0.50)]"
                 style={{
-                  background: 'linear-gradient(180deg, #c084fc 0%, #9333ea 35%, #6b21a8 70%, #3b0764 100%)',
+                  background: 'linear-gradient(180deg, #ffffff 15%, #d8b4fe 45%, #9333ea 85%, #6b21a8 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent'
                 }}
