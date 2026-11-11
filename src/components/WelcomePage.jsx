@@ -50,19 +50,29 @@ export function WelcomePage({ onExplore }) {
           className="absolute inset-0 w-full h-full object-cover object-[72%_center] lg:object-center select-none pointer-events-none"
         />
 
-        {/* Unified Cinematic Atmosphere - One cohesive, continuous environment across the full canvas */}
+        {/* Deep Cobalt / Royal Violet Atmosphere & Diffused Backlight */}
         <div 
           className="absolute inset-0 pointer-events-none"
           style={{
             background: `
-              radial-gradient(ellipse 95% 85% at 50% 50%, transparent 40%, rgba(7, 3, 20, 0.40) 80%, rgba(7, 3, 20, 0.75) 100%),
-              linear-gradient(to bottom, rgba(6, 2, 16, 0.45) 0%, transparent 15%, transparent 85%, rgba(6, 2, 16, 0.75) 100%)
+              radial-gradient(ellipse 75% 75% at 24% 38%, rgba(55, 30, 185, 0.45) 0%, rgba(30, 15, 110, 0.35) 45%, transparent 75%),
+              linear-gradient(to right, rgba(7, 3, 20, 0.65) 0%, rgba(10, 5, 28, 0.40) 35%, rgba(6, 2, 18, 0.30) 100%),
+              linear-gradient(to bottom, rgba(6, 2, 16, 0.65) 0%, transparent 18%, transparent 80%, rgba(4, 2, 10, 0.95) 100%)
             `
           }}
         />
 
-        {/* Subtle Ambient Top Glow Line */}
-        <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-purple-400/40 to-transparent" />
+        {/* 35mm Photographic Film Texture & Micro Sensor Grain */}
+        <div 
+          className="absolute inset-0 opacity-[0.038] pointer-events-none"
+          style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0)`,
+            backgroundSize: '20px 20px'
+          }}
+        />
+
+        {/* Ambient Top Glow Line */}
+        <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-purple-400/50 to-transparent" />
       </div>
 
       {/* =========================================================================
@@ -116,20 +126,20 @@ export function WelcomePage({ onExplore }) {
               ===================================================================== */}
           <div className="relative mb-6 sm:mb-8 select-text">
             
-            {/* Luminous Diffuse Glow / Volumetric Aura for maximum text visibility */}
+            {/* Luminous Diffuse Glow / Volumetric Aura behind the typography */}
             <div 
-              className="absolute -inset-6 sm:-inset-10 pointer-events-none opacity-80 blur-[70px]"
+              className="absolute -inset-6 sm:-inset-10 pointer-events-none opacity-85 blur-[60px] sm:blur-[85px]"
               style={{
-                background: 'radial-gradient(ellipse at 35% 45%, rgba(255, 255, 255, 0.25) 0%, rgba(168, 85, 247, 0.35) 35%, rgba(88, 28, 135, 0.20) 65%, transparent 80%)'
+                background: 'radial-gradient(ellipse at 35% 45%, rgba(255, 255, 255, 0.38) 0%, rgba(147, 51, 234, 0.38) 35%, rgba(88, 28, 135, 0.25) 65%, transparent 80%)'
               }}
               aria-hidden="true"
             />
 
             <h1 className="relative font-display text-[28px] xs:text-[36px] sm:text-[54px] md:text-[68px] lg:text-[84px] xl:text-[96px] font-black tracking-[-0.01em] leading-none select-text flex flex-col gap-1.5 sm:gap-2.5 md:gap-3.5">
               
-              {/* Word 1: COMPETITOR (High-visibility luminous gradient) */}
+              {/* Word 1: COMPETITOR (Matching INTEL's purple + white gradient treatment) */}
               <span 
-                className="block uppercase drop-shadow-[0_0_35px_rgba(168,85,247,0.50)]"
+                className="block uppercase drop-shadow-[0_0_40px_rgba(168,85,247,0.50)]"
                 style={{
                   background: 'linear-gradient(180deg, #ffffff 15%, #d8b4fe 45%, #9333ea 85%, #6b21a8 100%)',
                   WebkitBackgroundClip: 'text',
@@ -141,9 +151,9 @@ export function WelcomePage({ onExplore }) {
                 COMPETITOR
               </span>
 
-              {/* Word 2: INTEL (High-visibility luminous gradient) */}
+              {/* Word 2: INTEL (Clearly separated, unified purple + white gradient treatment) */}
               <span 
-                className="block uppercase drop-shadow-[0_0_35px_rgba(168,85,247,0.50)]"
+                className="block uppercase drop-shadow-[0_0_40px_rgba(168,85,247,0.50)]"
                 style={{
                   background: 'linear-gradient(180deg, #ffffff 15%, #d8b4fe 45%, #9333ea 85%, #6b21a8 100%)',
                   WebkitBackgroundClip: 'text',
