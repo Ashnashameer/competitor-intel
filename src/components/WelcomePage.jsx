@@ -127,11 +127,11 @@ export function WelcomePage({ onExplore }) {
 
             <h1 className="relative font-display text-[28px] xs:text-[36px] sm:text-[54px] md:text-[68px] lg:text-[84px] xl:text-[96px] font-black tracking-[-0.01em] leading-none select-text flex flex-col gap-1.5 sm:gap-2.5 md:gap-3.5">
               
-              {/* Word 1: COMPETITOR (Matching INTEL's purple + white gradient treatment) */}
+              {/* Word 1: COMPETITOR (Darker, richer royal purple gradient) */}
               <span 
-                className="block uppercase drop-shadow-[0_0_40px_rgba(168,85,247,0.50)]"
+                className="block uppercase drop-shadow-[0_4px_30px_rgba(59,7,100,0.70)]"
                 style={{
-                  background: 'linear-gradient(180deg, #ffffff 15%, #d8b4fe 45%, #9333ea 85%, #6b21a8 100%)',
+                  background: 'linear-gradient(180deg, #c084fc 0%, #9333ea 35%, #6b21a8 70%, #3b0764 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent'
                 }}
@@ -139,11 +139,11 @@ export function WelcomePage({ onExplore }) {
                 COMPETITOR
               </span>
 
-              {/* Word 2: INTEL (Clearly separated, unified purple + white gradient treatment) */}
+              {/* Word 2: INTEL (Darker, richer royal purple gradient) */}
               <span 
-                className="block uppercase drop-shadow-[0_0_40px_rgba(168,85,247,0.50)]"
+                className="block uppercase drop-shadow-[0_4px_30px_rgba(59,7,100,0.70)]"
                 style={{
-                  background: 'linear-gradient(180deg, #ffffff 15%, #d8b4fe 45%, #9333ea 85%, #6b21a8 100%)',
+                  background: 'linear-gradient(180deg, #c084fc 0%, #9333ea 35%, #6b21a8 70%, #3b0764 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent'
                 }}
