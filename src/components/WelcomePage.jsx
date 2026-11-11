@@ -126,31 +126,33 @@ export function WelcomePage({ onExplore }) {
               ===================================================================== */}
           <div className="relative mb-6 sm:mb-8 select-text">
             
-            <h1 className="relative font-display text-[28px] xs:text-[36px] sm:text-[54px] md:text-[68px] lg:text-[84px] xl:text-[96px] font-black tracking-[-0.01em] leading-none select-text flex flex-col gap-1.5 sm:gap-2.5 md:gap-3.5">
+            <h1 className="relative font-display text-[28px] xs:text-[36px] sm:text-[54px] md:text-[68px] lg:text-[84px] xl:text-[96px] font-black tracking-[0.015em] leading-none select-text flex flex-col gap-1.5 sm:gap-2.5 md:gap-3.5">
               
-              {/* Word 1: COMPETITOR (Solid, elegant purple gradient with strong contrast) */}
+              {/* Word 1: COMPETITOR (Solid, elegant purple gradient with clean letter spacing) */}
               <span 
-                className="block uppercase"
+                className="block uppercase whitespace-nowrap"
                 style={{
                   background: 'linear-gradient(180deg, #ede4fc 0%, #caa1fd 35%, #a855f7 70%, #8b24cf 100%)',
                   WebkitBackgroundClip: 'text',
                   backgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
-                  color: 'transparent'
+                  color: 'transparent',
+                  letterSpacing: '0.015em'
                 }}
               >
                 COMPETITOR
               </span>
 
-              {/* Word 2: INTEL (Solid, elegant purple gradient with strong contrast) */}
+              {/* Word 2: INTEL (Solid, elegant purple gradient with clean letter spacing) */}
               <span 
-                className="block uppercase"
+                className="block uppercase whitespace-nowrap"
                 style={{
                   background: 'linear-gradient(180deg, #ede4fc 0%, #caa1fd 35%, #a855f7 70%, #8b24cf 100%)',
                   WebkitBackgroundClip: 'text',
                   backgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
-                  color: 'transparent'
+                  color: 'transparent',
+                  letterSpacing: '0.015em'
                 }}
               >
                 INTEL

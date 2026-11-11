@@ -20,7 +20,7 @@
 /* Geometric Bold Display Heading Typography (Matching user reference) */
 .font-display {
   font-family: 'Outfit', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  letter-spacing: -0.04em;
+  letter-spacing: 0.015em;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
