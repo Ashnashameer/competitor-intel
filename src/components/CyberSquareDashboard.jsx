@@ -705,7 +705,7 @@ export function CyberSquareDashboard({ org, onBack }) {
 
               {/* Card 5: 11 Active Tracks */}
               <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-2xs flex flex-col justify-between">
-                <div className="flex items-center justify-between text-indigo-700 mb-2">
+                <div className="flex items-center justify-between text-purple-700 mb-2">
                   <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">Tracks</span>
                   <Layers className="w-4 h-4" />
                 </div>
@@ -902,7 +902,7 @@ export function CyberSquareDashboard({ org, onBack }) {
 
               {/* Card 2: Business Model */}
               <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-2">
-                <div className="flex items-center gap-2 text-indigo-700 font-bold uppercase font-mono text-[10px]">
+                <div className="flex items-center gap-2 text-purple-700 font-bold uppercase font-mono text-[10px]">
                   <Briefcase className="w-4 h-4" />
                   <span>Business Model</span>
                 </div>
@@ -1314,11 +1314,11 @@ export function CyberSquareDashboard({ org, onBack }) {
                 </div>
 
                 {/* Web Development */}
-                <div className="p-3 bg-indigo-50/50 rounded-xl border border-indigo-200/80 space-y-2">
-                  <span className="text-[10px] font-bold text-indigo-800 uppercase font-mono block">Web Development</span>
+                <div className="p-3 bg-purple-50/50 rounded-xl border border-purple-200/80 space-y-2">
+                  <span className="text-[10px] font-bold text-purple-800 uppercase font-mono block">Web Development</span>
                   <div className="flex flex-wrap gap-1">
                     {['HTML/CSS', 'Web Development'].map(t => (
-                      <span key={t} className="px-2 py-0.5 rounded-md bg-white border border-indigo-200 text-indigo-900 font-semibold text-[11px]">
+                      <span key={t} className="px-2 py-0.5 rounded-md bg-white border border-purple-200 text-purple-900 font-semibold text-[11px]">
                         {t}
                       </span>
                     ))}
@@ -1356,7 +1356,7 @@ export function CyberSquareDashboard({ org, onBack }) {
                 </div>
 
                 <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
-                  <div className="flex items-center gap-1.5 text-indigo-700 font-bold mb-1">
+                  <div className="flex items-center gap-1.5 text-purple-700 font-bold mb-1">
                     <Clock className="w-3.5 h-3.5" />
                     <span>Term Modules</span>
                   </div>
@@ -1491,7 +1491,7 @@ export function CyberSquareDashboard({ org, onBack }) {
               <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5 font-mono">
-                    <Award className="w-4 h-4 text-indigo-700" />
+                    <Award className="w-4 h-4 text-purple-700" />
                     <span>Executive & Teacher CPD Programmes</span>
                   </span>
                   <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">

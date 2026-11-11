@@ -91,7 +91,7 @@ export function CompetitorIntelligenceModal({
         {/* Sticky Drawer Top Bar */}
         <div className="sticky top-0 z-20 bg-gradient-to-r from-[#0c0a1a] via-[#16122d] to-[#0c0a1a] text-white px-6 py-4 flex items-center justify-between border-b border-purple-900/60 shadow-md">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 text-white font-black text-sm flex items-center justify-center shadow-inner">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-purple-600 text-white font-black text-sm flex items-center justify-center shadow-inner">
               {org.logoText || org.name.substring(0, 2).toUpperCase()}
             </div>
             <div>
@@ -453,7 +453,7 @@ export function CompetitorIntelligenceModal({
           {activeSection === 'intelligence' && (
             <div className="space-y-5">
               {/* Strategic Relevance to EDGE */}
-              <div className="p-5 bg-gradient-to-br from-purple-900 to-indigo-950 text-white rounded-2xl shadow-sm">
+              <div className="p-5 bg-gradient-to-br from-purple-900 to-purple-950 text-white rounded-2xl shadow-sm">
                 <div className="flex items-center gap-2 text-purple-300 text-xs font-mono uppercase tracking-wider mb-2">
                   <Target className="w-4 h-4" />
                   <span>Strategic Positioning for Edge</span>
@@ -570,7 +570,7 @@ export function CompetitorIntelligenceModal({
             </button>
             <button
               onClick={() => onOpenFullDossier && onOpenFullDossier(org)}
-              className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-600 hover:to-indigo-600 transition-all flex items-center gap-1.5 shadow-sm shadow-purple-900/20"
+              className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-purple-700 to-purple-700 hover:from-purple-600 hover:to-purple-600 transition-all flex items-center gap-1.5 shadow-sm shadow-purple-900/20"
             >
               <span>Open Deep Dossier & Evidence Vault</span>
               <ArrowRight className="w-3.5 h-3.5" />

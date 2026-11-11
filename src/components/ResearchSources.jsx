@@ -68,7 +68,7 @@ export function ResearchSources() {
   return (
     <div className="space-y-4">
       {/* Top Banner and Controls */}
-      <div className="bg-white rounded-2xl border border-purple-100 p-4 shadow-xs">
+      <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
             <h1 className="text-base font-bold text-slate-900 flex items-center gap-2">
@@ -83,7 +83,7 @@ export function ResearchSources() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsAddModalOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-700 hover:from-violet-700 hover:to-indigo-800 rounded-xl shadow-xs transition-all shrink-0"
+              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-lg shadow-xs transition-all shrink-0 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Citation</span>
@@ -92,15 +92,15 @@ export function ResearchSources() {
         </div>
 
         {/* Filter Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mt-3 pt-3 border-t border-purple-50">
+        <div className="flex flex-wrap items-center justify-between gap-3 mt-3 pt-3 border-t border-slate-150">
           <div className="flex-1 max-w-sm relative">
-            <Search className="w-3.5 h-3.5 text-purple-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search citations or related entities..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-purple-50/30 border border-purple-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600 text-slate-900"
+              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-250 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white text-slate-900 placeholder:text-slate-400"
             />
           </div>
 
@@ -109,7 +109,7 @@ export function ResearchSources() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-purple-50/40 border border-purple-200/80 rounded-xl px-2.5 py-1.5 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-purple-600 cursor-pointer"
+              className="bg-slate-50 border border-slate-250 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 font-medium focus:outline-none focus:ring-1 focus:ring-purple-500 cursor-pointer"
             >
               <option value="All">All Verification Statuses</option>
               <option value="verified">Verified Evidence</option>
@@ -121,27 +121,27 @@ export function ResearchSources() {
       </div>
 
       {/* Sources List / Table */}
-      <div className="bg-white rounded-2xl border border-purple-100 shadow-xs overflow-hidden">
+      <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-purple-50/40 text-slate-600 font-bold border-b border-purple-100">
+            <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase tracking-wider text-[11px]">
               <tr>
-                <th className="px-5 py-3.5">Source Citation</th>
-                <th className="px-4 py-3.5">Related Organisation</th>
-                <th className="px-4 py-3.5">Documentation Details</th>
-                <th className="px-4 py-3.5">Verification Level</th>
-                <th className="px-4 py-3.5">Audit Date</th>
-                <th className="px-5 py-3.5 text-right">Link</th>
+                <th className="px-5 py-3">Source Citation</th>
+                <th className="px-4 py-3">Related Organisation</th>
+                <th className="px-4 py-3">Documentation Details</th>
+                <th className="px-4 py-3">Verification Level</th>
+                <th className="px-4 py-3">Audit Date</th>
+                <th className="px-5 py-3 text-right">Link</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-purple-50">
+            <tbody className="divide-y divide-slate-150">
               {filtered.map(src => (
-                <tr key={src.id} className="hover:bg-purple-50/30 transition-colors">
+                <tr key={src.id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-5 py-3.5 font-medium text-slate-900">
-                    <div className="font-bold text-slate-900">{src.sourceTitle}</div>
+                    <div className="font-semibold text-slate-900">{src.sourceTitle}</div>
                   </td>
 
-                  <td className="px-4 py-3.5 text-purple-700 font-bold">
+                  <td className="px-4 py-3.5 text-slate-900 font-medium">
                     {src.relatedOrg}
                   </td>
 
@@ -163,7 +163,7 @@ export function ResearchSources() {
                         href={src.sourceUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-purple-700 hover:text-purple-900 font-bold inline-flex items-center gap-1 hover:underline"
+                        className="text-purple-600 hover:text-purple-800 font-medium inline-flex items-center gap-1 hover:underline"
                       >
                         <span>Open</span>
                         <ExternalLink className="w-3.5 h-3.5" />

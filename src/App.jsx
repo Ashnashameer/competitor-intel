@@ -23,17 +23,93 @@ import { CompetitorActivityTracker } from './components/CompetitorActivityTracke
 import { Menu } from 'lucide-react';
 
 function MainApp() {
-  const { addOrganisation, updateOrganisation, deleteOrganisation } = useData();
+  const { addOrganisation, updateOrganisation, deleteOrganisation, organisations } = useData();
 
-  // Navigation State: 'welcome', 'categories', 'category-detail', 'overview', 'organisations', 'courses', 'comparison', 'sources', 'organisation-detail'
-  const [activeTab, setActiveTab] = useState('welcome'); // Default to Welcome Hero Screen
-  const [selectedCategory, setSelectedCategory] = useState('schools'); // 'schools' | 'colleges' | 'corporate' | 'other_partnerships'
+  // Navigation State with URL hash synchronization
+  const [activeTab, setActiveTabState] = useState(() => {
+    try {
+      const hash = window.location.hash.replace('#', '').trim();
+      if (['schools', 'colleges', 'corporate', 'other_partnerships'].includes(hash)) {
+        return 'category-detail';
+      }
+      if (hash.startsWith('org-') || hash.startsWith('profile-')) {
+        return 'organisation-detail';
+      }
+      return hash || 'welcome';
+    } catch {
+      return 'welcome';
+    }
+  });
+
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    try {
+      const hash = window.location.hash.replace('#', '').trim();
+      if (['schools', 'colleges', 'corporate', 'other_partnerships'].includes(hash)) {
+        return hash;
+      }
+      return 'schools';
+    } catch {
+      return 'schools';
+    }
+  });
+
+  const setActiveTab = (tab) => {
+    setActiveTabState(tab);
+    try {
+      if (tab === 'welcome') {
+        if (window.location.hash) {
+          history.replaceState(null, '', window.location.pathname + window.location.search);
+        }
+      } else if (tab === 'category-detail') {
+        window.location.hash = selectedCategory;
+      } else if (tab === 'organisation-detail' && selectedOrg) {
+        window.location.hash = `profile-${selectedOrg.id}`;
+      } else {
+        window.location.hash = tab;
+      }
+    } catch {}
+  };
+
+  React.useEffect(() => {
+    const handleHashChange = () => {
+      try {
+        const hash = window.location.hash.replace('#', '').trim();
+        if (hash) {
+          if (['schools', 'colleges', 'corporate', 'other_partnerships'].includes(hash)) {
+            setSelectedCategory(hash);
+            setActiveTabState('category-detail');
+          } else if (hash.startsWith('org-') || hash.startsWith('profile-')) {
+            const orgId = hash.replace('profile-', '');
+            const targetOrg = organisations.find(o => o.id === orgId);
+            if (targetOrg) {
+              setSelectedOrg(targetOrg);
+              setActiveTabState('organisation-detail');
+            }
+          } else {
+            setActiveTabState(hash);
+          }
+        }
+      } catch {}
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [organisations]);
+
   const [previousTab, setPreviousTab] = useState('categories');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSlicerOpen, setIsSlicerOpen] = useState(false);
 
   // Selected organisation for the dedicated full profile page
-  const [selectedOrg, setSelectedOrg] = useState(null);
+  const [selectedOrg, setSelectedOrg] = useState(() => {
+    try {
+      const hash = window.location.hash.replace('#', '').trim();
+      if (hash.startsWith('org-') || hash.startsWith('profile-')) {
+        const orgId = hash.replace('profile-', '');
+        return organisations.find(o => o.id === orgId) || null;
+      }
+    } catch {}
+    return null;
+  });
   const [isAddEditModalOpen, setIsAddEditModalOpen] = useState(false);
   const [editingOrg, setEditingOrg] = useState(null);
 
@@ -54,7 +130,11 @@ function MainApp() {
 
   const handleBackToOrganisations = () => {
     setSelectedOrg(null);
-    setActiveTab(previousTab || 'categories');
+    if (selectedCategory) {
+      setActiveTab('category-detail');
+    } else {
+      setActiveTab(previousTab || 'categories');
+    }
   };
 
   const handleEditOrg = (org) => {
@@ -80,8 +160,10 @@ function MainApp() {
 
   const renderActiveTabContent = () => {
     switch (activeTab) {
-      // 1. PRIMARY SECOND PAGE: COMPETITOR CATEGORIES (4 Cards)
+      // 1. PRIMARY SECOND PAGE: COMPETITOR CATEGORIES (4 Cards Only)
       case 'categories':
+      case 'directory':
+      case 'organisations':
         return (
           <CompetitorCategoriesPage 
             onSelectCategory={handleSelectCategory}
@@ -106,7 +188,10 @@ function MainApp() {
           <CategoryCompetitorListPage 
             categoryId="schools"
             onBackToCategories={handleBackToCategories}
-            onSelectOrg={handleSelectOrg}
+            onSelectOrg={(org) => {
+              setSelectedCategory('schools');
+              handleSelectOrg(org);
+            }}
             onNavigateHome={() => setActiveTab('welcome')}
           />
         );
@@ -116,7 +201,10 @@ function MainApp() {
           <CategoryCompetitorListPage 
             categoryId="colleges"
             onBackToCategories={handleBackToCategories}
-            onSelectOrg={handleSelectOrg}
+            onSelectOrg={(org) => {
+              setSelectedCategory('colleges');
+              handleSelectOrg(org);
+            }}
             onNavigateHome={() => setActiveTab('welcome')}
           />
         );
@@ -126,7 +214,10 @@ function MainApp() {
           <CategoryCompetitorListPage 
             categoryId="corporate"
             onBackToCategories={handleBackToCategories}
-            onSelectOrg={handleSelectOrg}
+            onSelectOrg={(org) => {
+              setSelectedCategory('corporate');
+              handleSelectOrg(org);
+            }}
             onNavigateHome={() => setActiveTab('welcome')}
           />
         );
@@ -136,7 +227,10 @@ function MainApp() {
           <CategoryCompetitorListPage 
             categoryId="other_partnerships"
             onBackToCategories={handleBackToCategories}
-            onSelectOrg={handleSelectOrg}
+            onSelectOrg={(org) => {
+              setSelectedCategory('other_partnerships');
+              handleSelectOrg(org);
+            }}
             onNavigateHome={() => setActiveTab('welcome')}
           />
         );
@@ -148,6 +242,7 @@ function MainApp() {
             org={selectedOrg} 
             onBack={handleBackToOrganisations}
             onEdit={handleEditOrg}
+            categoryContext={selectedCategory}
           />
         );
 
@@ -155,8 +250,8 @@ function MainApp() {
       case 'overview':
         return <OverviewDashboard onSelectOrg={handleSelectOrg} setActiveTab={setActiveTab} />;
       
-      case 'organisations':
-      case 'directory':
+      case 'all-competitors':
+      case 'master-directory':
         return (
           <CompetitorDirectory 
             onSelectOrg={handleSelectOrg} 
@@ -228,7 +323,7 @@ function MainApp() {
   };
 
   // Render Full-Screen Minimal Welcome Hero Page
-  // When user clicks "Explore Edge", transitions to 'categories' (the second page)
+  // When user clicks "Explore Edge", transitions to 'overview' (the command center)
   if (activeTab === 'welcome') {
     return (
       <WelcomePage 
@@ -272,7 +367,8 @@ function MainApp() {
         <div className="lg:hidden bg-[#0c0a1a] text-white px-4 py-2.5 flex items-center justify-between border-b border-[#241e3d]">
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="p-1 rounded text-purple-300 hover:text-white"
+            className="p-1.5 rounded-lg text-purple-300 hover:text-white hover:bg-white/10 cursor-pointer"
+            aria-label="Open navigation menu"
           >
             <Menu className="w-5 h-5" />
           </button>

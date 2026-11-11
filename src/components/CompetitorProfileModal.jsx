@@ -39,7 +39,7 @@ export function CompetitorProfileModal({
         {/* Profile Header */}
         <div className="p-5 sm:p-6 bg-[#0c0a17] text-white border-b border-purple-950 flex items-start justify-between gap-4">
           <div className="flex items-start gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 via-purple-600 to-indigo-900 text-white font-black text-xl flex items-center justify-center shrink-0 shadow-lg shadow-purple-950/60 border border-purple-400/30">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 via-purple-600 to-purple-900 text-white font-black text-xl flex items-center justify-center shrink-0 shadow-lg shadow-purple-950/60 border border-purple-400/30">
               {org.logoText || org.name.substring(0, 2).toUpperCase()}
             </div>
             <div>

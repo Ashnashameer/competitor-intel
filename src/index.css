@@ -7,13 +7,24 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    max-width: 100vw;
   }
   body {
     @apply bg-[#fbf9ff] text-slate-900 antialiased font-sans selection:bg-purple-600 selection:text-white;
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 }
 
-/* Editorial High-Contrast Serif (New York Typeface aesthetic) */
+/* Geometric Bold Display Heading Typography (Matching user reference) */
+.font-display {
+  font-family: 'Outfit', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.04em;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Editorial High-Contrast Serif Option */
 .font-editorial {
   font-family: "New York", -apple-system-ui-serif, "Bodoni Moda", "Playfair Display", "Cormorant Garamond", Didot, Georgia, serif;
   font-feature-settings: "kern" 1, "liga" 1;

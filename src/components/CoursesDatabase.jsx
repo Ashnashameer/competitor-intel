@@ -94,17 +94,17 @@ export function CoursesDatabase() {
   return (
     <div className="space-y-4">
       {/* Controls Bar */}
-      <div className="bg-white rounded-2xl border border-purple-100 p-4 shadow-xs">
+      <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           {/* Search */}
           <div className="flex-1 max-w-sm relative">
-            <Search className="w-4 h-4 text-purple-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search courses or providers..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-xs bg-purple-50/30 border border-purple-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all text-slate-900"
+              className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-250 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all text-slate-900 placeholder:text-slate-400 font-medium"
             />
           </div>
 
@@ -113,7 +113,7 @@ export function CoursesDatabase() {
             <select
               value={selectedTech}
               onChange={(e) => setSelectedTech(e.target.value)}
-              className="bg-purple-50/40 border border-purple-200/80 rounded-xl px-2.5 py-2 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-purple-600 cursor-pointer"
+              className="bg-slate-50 border border-slate-250 rounded-lg px-2.5 py-2 text-xs text-slate-700 font-medium focus:outline-none focus:ring-1 focus:ring-purple-500 cursor-pointer"
             >
               <option value="All">All Technologies</option>
               {TECHNOLOGIES.map(t => (
@@ -124,7 +124,7 @@ export function CoursesDatabase() {
             <select
               value={selectedDuration}
               onChange={(e) => setSelectedDuration(e.target.value)}
-              className="bg-purple-50/40 border border-purple-200/80 rounded-xl px-2.5 py-2 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-purple-600 cursor-pointer"
+              className="bg-slate-50 border border-slate-250 rounded-lg px-2.5 py-2 text-xs text-slate-700 font-medium focus:outline-none focus:ring-1 focus:ring-purple-500 cursor-pointer"
             >
               <option value="All">All Durations</option>
               {DURATIONS.map(d => (
@@ -134,7 +134,7 @@ export function CoursesDatabase() {
 
             <button
               onClick={() => setIsAddModalOpen(true)}
-              className="ml-auto flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-700 hover:from-violet-700 hover:to-indigo-800 rounded-xl shadow-xs transition-all shrink-0"
+              className="ml-auto flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-lg shadow-xs transition-all shrink-0 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Course</span>
@@ -142,32 +142,32 @@ export function CoursesDatabase() {
           </div>
         </div>
 
-        <div className="mt-3 pt-2.5 border-t border-purple-50 flex items-center justify-between text-[11px] text-slate-500">
+        <div className="mt-3 pt-2.5 border-t border-slate-150 flex items-center justify-between text-[11px] text-slate-500">
           <span>
             Showing <strong className="text-slate-900 font-semibold">{displayedCourses.length}</strong> programmes
           </span>
-          <span className="text-purple-700 font-medium">
-            Short-term, 3, 6 & 12-month curricula in Kerala
+          <span className="text-slate-500">
+            Audited technology curricula & fee benchmarks
           </span>
         </div>
       </div>
 
       {/* Courses Table */}
-      <div className="bg-white rounded-2xl border border-purple-100 shadow-xs overflow-hidden">
+      <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-purple-50/40 text-slate-600 font-bold border-b border-purple-100">
+            <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase tracking-wider text-[11px]">
               <tr>
-                <th className="px-5 py-3.5">Course / Programme</th>
-                <th className="px-4 py-3.5">Provider</th>
-                <th className="px-4 py-3.5">Technology</th>
-                <th className="px-4 py-3.5">Duration & Format</th>
-                <th className="px-4 py-3.5">Estimated Fee</th>
-                <th className="px-4 py-3.5">Internship / Support</th>
-                <th className="px-5 py-3.5 text-right">Actions</th>
+                <th className="px-5 py-3">Course / Programme</th>
+                <th className="px-4 py-3">Provider</th>
+                <th className="px-4 py-3">Technology</th>
+                <th className="px-4 py-3">Duration & Format</th>
+                <th className="px-4 py-3">Estimated Fee</th>
+                <th className="px-4 py-3">Internship / Support</th>
+                <th className="px-5 py-3 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-purple-50">
+            <tbody className="divide-y divide-slate-150">
               {displayedCourses.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-5 py-8 text-center text-slate-500">
@@ -176,42 +176,42 @@ export function CoursesDatabase() {
                 </tr>
               ) : (
                 displayedCourses.map(course => (
-                  <tr key={course.id} className="hover:bg-purple-50/30 transition-colors">
+                  <tr key={course.id} className="hover:bg-slate-50 transition-colors">
                     <td className="px-5 py-3.5 font-medium text-slate-900">
-                      <div className="font-bold text-slate-900">{course.courseName}</div>
+                      <div className="font-semibold text-slate-900">{course.courseName}</div>
                       {course.targetAudience && (
-                        <div className="text-[11px] text-slate-400">{course.targetAudience}</div>
+                        <div className="text-[11px] text-slate-500">{course.targetAudience}</div>
                       )}
                     </td>
 
-                    <td className="px-4 py-3.5 text-slate-700 font-semibold">
+                    <td className="px-4 py-3.5 text-slate-700 font-medium">
                       {course.orgName}
                     </td>
 
                     <td className="px-4 py-3.5">
-                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-purple-50 text-purple-700 border border-purple-200">
+                      <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-700 border border-slate-200">
                         {course.techCategory}
                       </span>
                     </td>
 
                     <td className="px-4 py-3.5 text-slate-600">
                       <div className="font-medium text-slate-800">{course.duration}</div>
-                      <div className="text-[11px] text-slate-400">{course.deliveryMethod}</div>
+                      <div className="text-[11px] text-slate-500">{course.deliveryMethod}</div>
                     </td>
 
-                    <td className="px-4 py-3.5 text-slate-900 font-bold">
+                    <td className="px-4 py-3.5 text-slate-900 font-semibold">
                       {course.fees || 'On Inquiry'}
                     </td>
 
                     <td className="px-4 py-3.5 text-slate-600">
                       <div className="flex items-center gap-1.5">
                         {course.internshipComponent && (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">
+                          <span className="px-2 py-0.5 rounded text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium">
                             Internship
                           </span>
                         )}
                         {course.placementAssistance && (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] bg-purple-50 text-purple-700 border border-purple-200 font-semibold">
+                          <span className="px-2 py-0.5 rounded text-[10px] bg-purple-50 text-purple-700 border border-purple-200 font-medium">
                             Placement
                           </span>
                         )}

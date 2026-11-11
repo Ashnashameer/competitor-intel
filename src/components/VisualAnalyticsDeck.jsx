@@ -109,7 +109,7 @@ export function VisualAnalyticsDeck({
       {/* Analytics Deck Header */}
       <div className="px-5 py-4 border-b border-purple-100/80 bg-gradient-to-r from-purple-50/50 via-white to-purple-50/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 text-white flex items-center justify-center shadow-xs">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-purple-600 text-white flex items-center justify-center shadow-xs">
             <BarChart3 className="w-4 h-4" />
           </div>
           <div>
@@ -218,9 +218,9 @@ export function VisualAnalyticsDeck({
                       <div
                         className={`h-full rounded-full transition-all duration-500 ${
                           isSelected
-                            ? 'bg-gradient-to-r from-purple-600 to-indigo-600'
+                            ? 'bg-gradient-to-r from-purple-600 to-purple-600'
                             : count > 0
-                            ? 'bg-gradient-to-r from-purple-400 to-purple-600 group-hover:from-purple-500 group-hover:to-indigo-500'
+                            ? 'bg-gradient-to-r from-purple-400 to-purple-600 group-hover:from-purple-500 group-hover:to-purple-500'
                             : 'bg-transparent'
                         }`}
                         style={{ width: `${Math.max(percent, count > 0 ? 8 : 0)}%` }}
@@ -271,7 +271,7 @@ export function VisualAnalyticsDeck({
 
                     <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-2">
                       <div
-                        className="h-full bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full transition-all duration-500"
+                        className="h-full bg-gradient-to-r from-purple-600 to-purple-600 rounded-full transition-all duration-500"
                         style={{ width: `${cat.percentage}%` }}
                       />
                     </div>
@@ -340,7 +340,7 @@ export function VisualAnalyticsDeck({
                       </div>
                       <div className="w-full bg-slate-200/70 h-2 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full"
+                          className="h-full bg-gradient-to-r from-purple-500 to-purple-600 rounded-full"
                           style={{ width: `${percentage}%` }}
                         />
                       </div>

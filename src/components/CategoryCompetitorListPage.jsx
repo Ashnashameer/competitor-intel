@@ -18,6 +18,7 @@ import {
   ChevronDown,
   Cpu,
   HeartHandshake,
+  Handshake,
   SlidersHorizontal,
   Sparkles
 } from 'lucide-react';
@@ -26,7 +27,8 @@ import {
   getOrganisationsForCategory,
   PARTNER_ECOSYSTEM,
   SCHOOL_SKILL_CATEGORIES,
-  getCompetitorSkillCategories
+  getCompetitorSkillCategories,
+  getCategoryPartnershipMetrics
 } from '../data/categoryRelationships';
 import { useData } from '../context/DataContext';
 
@@ -63,6 +65,9 @@ export function CategoryCompetitorListPage({
   // Sorting State for Table View
   const [sortField, setSortField] = useState('name');
   const [sortDirection, setSortDirection] = useState('asc'); // 'asc' | 'desc'
+
+  // Entity Nature Filter State: 'all' | 'external_provider' | 'institution'
+  const [selectedEntityNature, setSelectedEntityNature] = useState('all');
 
   // ==========================================
   // CATEGORY-SPECIFIC FILTER STATES
@@ -216,6 +221,12 @@ export function CategoryCompetitorListPage({
         }
       }
 
+      // Entity Nature Filter (Providers vs Institutions)
+      if (selectedEntityNature !== 'all') {
+        const nature = org.entityNature || (org.segment === 'training_institutes' || org.segment === 'agencies_edtech' ? 'external_provider' : 'institution');
+        if (nature !== selectedEntityNature) return false;
+      }
+
       // Schools Filters
       if (categoryId === 'schools') {
         if (schoolSkillCategory !== 'All') {
@@ -353,15 +364,15 @@ export function CategoryCompetitorListPage({
   const getPageHeading = () => {
     switch (categoryId) {
       case 'schools':
-        return 'Schools';
+        return 'School Partner Directory';
       case 'colleges':
-        return 'Colleges';
+        return 'College Partner Directory';
       case 'corporate':
-        return 'Corporate';
+        return 'Corporate Partner Directory';
       case 'other_partnerships':
-        return 'Other Partnerships';
+        return 'Other Partnership Directory';
       default:
-        return category.title;
+        return `${category.title} Partner Directory`;
     }
   };
 
@@ -418,23 +429,23 @@ export function CategoryCompetitorListPage({
       {/* ========================================================================= */}
       {/* 1. CLEAN BREADCRUMB & BACK NAVIGATION                                    */}
       {/* ========================================================================= */}
-      <div className="flex items-center justify-between gap-3 pb-2 border-b border-purple-100/80">
+      <div className="flex items-center justify-between gap-3 pb-3 border-b border-slate-200">
         <nav className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
           <button
             onClick={onBackToCategories}
-            className="text-purple-700 hover:text-purple-900 hover:underline font-semibold"
+            className="text-purple-600 hover:text-purple-800 hover:underline font-semibold"
           >
-            Competitor Categories
+            Categories
           </button>
           <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-          <span className="text-slate-900 font-bold">{category.title}</span>
+          <span className="text-slate-900 font-semibold">{category.title}</span>
         </nav>
 
         <button
           onClick={onBackToCategories}
-          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold text-purple-800 bg-purple-50 hover:bg-purple-100 border border-purple-200 transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-colors cursor-pointer"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
+          <ArrowLeft className="w-3.5 h-3.5 text-slate-500" />
           <span>Back to Categories</span>
         </button>
       </div>
@@ -443,34 +454,41 @@ export function CategoryCompetitorListPage({
       {/* 2. MINIMAL HEADING & VIEW SWITCHER                                        */}
       {/* ========================================================================= */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-          {getPageHeading()}
-        </h1>
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+            {getPageHeading()}
+          </h1>
+          <p className="text-xs text-slate-500 mt-0.5">
+            {categoryId === 'schools' 
+              ? `${filteredOrganisations.length} verified external school partners & curriculum providers in Kerala`
+              : `${filteredOrganisations.length} verified ${filteredOrganisations.length === 1 ? 'competitor' : 'competitors'} in this category`}
+          </p>
+        </div>
 
         {/* View Switcher: Card View vs Table View */}
-        <div className="flex items-center p-1 bg-purple-50/80 rounded-xl border border-purple-200/80 shrink-0 self-start sm:self-auto">
+        <div className="flex items-center p-0.5 bg-slate-100 rounded-lg border border-slate-200 shrink-0 self-start sm:self-auto">
           <button
             onClick={() => setViewMode('card')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
               viewMode === 'card'
-                ? 'bg-purple-700 text-white shadow-xs'
-                : 'text-purple-900 hover:text-purple-700'
+                ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <LayoutGrid className="w-3.5 h-3.5" />
-            <span>Card View</span>
+            <span>Cards</span>
           </button>
 
           <button
             onClick={() => setViewMode('table')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
               viewMode === 'table'
-                ? 'bg-purple-700 text-white shadow-xs'
-                : 'text-purple-900 hover:text-purple-700'
+                ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <Table2 className="w-3.5 h-3.5" />
-            <span>Table View</span>
+            <span>Table</span>
           </button>
         </div>
       </div>
@@ -478,16 +496,16 @@ export function CategoryCompetitorListPage({
       {/* ========================================================================= */}
       {/* 3. FUNCTIONAL SEARCH & RELEVANT CATEGORY FILTERS                          */}
       {/* ========================================================================= */}
-      <div className="bg-white rounded-2xl p-4 border border-purple-100 shadow-2xs space-y-3">
+      <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-xs space-y-3">
         {/* Search Bar */}
         <div className="relative">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder={`Search ${category.title.toLowerCase()} by organisation name, location, services, programmes...`}
+            placeholder={`Search ${category.title.toLowerCase()} by name, location, services, or programmes...`}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-8 py-2 text-xs bg-purple-50/30 border border-purple-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-white transition-all text-slate-900 placeholder-slate-400 font-medium"
+            className="w-full pl-9 pr-8 py-2 text-xs bg-slate-50 border border-slate-250 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:bg-white transition-all text-slate-900 placeholder-slate-400 font-medium"
           />
           {searchQuery && (
             <button
@@ -500,34 +518,94 @@ export function CategoryCompetitorListPage({
         </div>
 
         {/* ========================================================================= */}
+        {/* ENTITY TYPE FILTER BAR (PROVIDERS VS INSTITUTIONS)                        */}
+        {/* ========================================================================= */}
+        {categoryId !== 'schools' ? (
+          <div className="pt-2 pb-1 border-t border-slate-150">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <div className="flex items-center gap-2">
+                <Building2 className="w-3.5 h-3.5 text-slate-500" />
+                <span className="text-xs font-semibold text-slate-700">
+                  Entity Nature:
+                </span>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-1.5 p-0.5 bg-slate-100 rounded-lg border border-slate-200">
+                <button
+                  onClick={() => setSelectedEntityNature('all')}
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-all cursor-pointer ${
+                    selectedEntityNature === 'all'
+                      ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  <span>All ({categoryOrganisations.length})</span>
+                </button>
+                <button
+                  onClick={() => setSelectedEntityNature('external_provider')}
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-all cursor-pointer ${
+                    selectedEntityNature === 'external_provider'
+                      ? 'bg-white text-purple-700 shadow-xs font-semibold'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+                  <span>External Service Providers ({categoryOrganisations.filter(o => o.entityNature === 'external_provider' || o.segment === 'training_institutes' || o.segment === 'agencies_edtech').length})</span>
+                </button>
+                <button
+                  onClick={() => setSelectedEntityNature('institution')}
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-all cursor-pointer ${
+                    selectedEntityNature === 'institution'
+                      ? 'bg-white text-blue-700 shadow-xs font-semibold'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                  <span>Institutions Themselves ({categoryOrganisations.filter(o => o.entityNature === 'institution' || o.segment === 'schools' || o.segment === 'colleges' || o.segment === 'higher_secondary').length})</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="pt-2 pb-1 border-t border-slate-150 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-2 text-slate-700">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+              <span className="font-bold text-slate-900">Curated School Partner Directory:</span>
+              <span className="text-slate-600">Strictly external providers delivering verified in-school programmes & labs</span>
+            </div>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold bg-purple-50 text-purple-700 border border-purple-200 shrink-0 self-start sm:self-auto">
+              <span>{categoryOrganisations.length} External Providers</span>
+            </span>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
         {/* SKILL CATEGORY FILTER BAR (SCHOOLS SECTION ONLY)                          */}
         {/* ========================================================================= */}
         {categoryId === 'schools' && (
-          <div className="pt-2 pb-1 border-t border-purple-100/70">
+          <div className="pt-2 pb-1 border-t border-slate-150">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div className="flex items-center gap-2">
-                <SlidersHorizontal className="w-4 h-4 text-purple-700" />
-                <span className="text-xs font-bold text-slate-800 uppercase tracking-wider font-mono">
-                  Skill Category:
+                <SlidersHorizontal className="w-3.5 h-3.5 text-slate-500" />
+                <span className="text-xs font-semibold text-slate-700">
+                  Skill Focus:
                 </span>
               </div>
 
               {/* 3 Interactive Category Pills */}
-              <div className="flex flex-wrap items-center gap-1.5 p-1 bg-purple-50/70 rounded-xl border border-purple-200/80">
+              <div className="flex flex-wrap items-center gap-1.5 p-0.5 bg-slate-100 rounded-lg border border-slate-200">
                 {/* 1. All Categories */}
                 <button
                   onClick={() => setSchoolSkillCategory('All')}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-all cursor-pointer ${
                     schoolSkillCategory === 'All'
-                      ? 'bg-purple-700 text-white shadow-xs'
-                      : 'text-purple-900 hover:text-purple-700 hover:bg-white/60'
+                      ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                      : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
-                  <span>All Categories</span>
-                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
-                    schoolSkillCategory === 'All'
-                      ? 'bg-purple-900 text-purple-100'
-                      : 'bg-purple-200/80 text-purple-800'
+                  <span>All</span>
+                  <span className={`px-1.5 py-0.2 rounded text-[10px] ${
+                    schoolSkillCategory === 'All' ? 'bg-slate-100 text-slate-800' : 'bg-slate-200/70 text-slate-600'
                   }`}>
                     {categoryOrganisations.length}
                   </span>
@@ -536,19 +614,16 @@ export function CategoryCompetitorListPage({
                 {/* 2. Technical Skills */}
                 <button
                   onClick={() => setSchoolSkillCategory('Technical Skills')}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-all cursor-pointer ${
                     schoolSkillCategory === 'Technical Skills'
-                      ? 'bg-indigo-700 text-white shadow-xs'
-                      : 'text-indigo-900 hover:text-indigo-700 hover:bg-white/60'
+                      ? 'bg-white text-purple-700 shadow-xs font-semibold'
+                      : 'text-slate-600 hover:text-slate-900'
                   }`}
-                  title="Artificial Intelligence, Coding, Robotics, Data Analytics, STEM Education"
                 >
-                  <Cpu className="w-3.5 h-3.5" />
+                  <Cpu className="w-3 h-3 text-purple-500" />
                   <span>Technical Skills</span>
-                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
-                    schoolSkillCategory === 'Technical Skills'
-                      ? 'bg-indigo-900 text-indigo-100'
-                      : 'bg-indigo-100 text-indigo-800'
+                  <span className={`px-1.5 py-0.2 rounded text-[10px] ${
+                    schoolSkillCategory === 'Technical Skills' ? 'bg-purple-50 text-purple-700' : 'bg-slate-200/70 text-slate-600'
                   }`}>
                     {techCount}
                   </span>
@@ -557,41 +632,25 @@ export function CategoryCompetitorListPage({
                 {/* 3. Soft Skills & Personal Development */}
                 <button
                   onClick={() => setSchoolSkillCategory('Soft Skills & Personal Development')}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-all cursor-pointer ${
                     schoolSkillCategory === 'Soft Skills & Personal Development'
-                      ? 'bg-rose-700 text-white shadow-xs'
-                      : 'text-rose-900 hover:text-rose-700 hover:bg-white/60'
+                      ? 'bg-white text-rose-700 shadow-xs font-semibold'
+                      : 'text-slate-600 hover:text-slate-900'
                   }`}
-                  title="Communication Skills, Leadership, Teamwork, Confidence Building, Emotional Intelligence, Life Skills"
                 >
-                  <HeartHandshake className="w-3.5 h-3.5" />
-                  <span>Soft Skills & Personal Development</span>
-                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
-                    schoolSkillCategory === 'Soft Skills & Personal Development'
-                      ? 'bg-rose-900 text-rose-100'
-                      : 'bg-rose-100 text-rose-800'
+                  <HeartHandshake className="w-3 h-3 text-rose-500" />
+                  <span>Soft Skills & Development</span>
+                  <span className={`px-1.5 py-0.2 rounded text-[10px] ${
+                    schoolSkillCategory === 'Soft Skills & Personal Development' ? 'bg-rose-50 text-rose-700' : 'bg-slate-200/70 text-slate-600'
                   }`}>
                     {softCount}
                   </span>
                 </button>
               </div>
             </div>
-
-            {/* Micro Helper Tagline showing the scope of the active category */}
-            <div className="pt-2 flex items-center gap-1.5 text-[11px] text-slate-500 font-medium">
-              <span className="font-semibold text-slate-700 font-mono">Scope:</span>
-              {schoolSkillCategory === 'All' && (
-                <span>Showing all {categoryOrganisations.length} verified and registered school competitors.</span>
-              )}
-              {schoolSkillCategory === 'Technical Skills' && (
-                <span className="text-indigo-800 font-medium">Artificial Intelligence, Coding & Programming, Robotics, Data Analytics, Digital Marketing, Cloud Computing & STEM.</span>
-              )}
-              {schoolSkillCategory === 'Soft Skills & Personal Development' && (
-                <span className="text-rose-800 font-medium">Communication Skills, Leadership, Teamwork, Confidence Building, Emotional Intelligence, Cognitive & Life Skills.</span>
-              )}
-            </div>
           </div>
         )}
+
 
         {/* Dynamic Category Filters Row */}
         <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-purple-50">
@@ -952,7 +1011,7 @@ export function CategoryCompetitorListPage({
           {isFilterActive && (
             <button
               onClick={handleResetFilters}
-              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold text-purple-700 hover:text-purple-900 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer"
               title="Reset all filters"
             >
               <RotateCcw className="w-3 h-3" />
@@ -966,17 +1025,17 @@ export function CategoryCompetitorListPage({
       {/* 4. DIRECTORY: ZERO RESULTS STATE                                          */}
       {/* ========================================================================= */}
       {filteredOrganisations.length === 0 && (
-        <div className="bg-white rounded-2xl p-10 text-center border border-purple-100 max-w-md mx-auto space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 mx-auto flex items-center justify-center font-bold">
+        <div className="bg-white rounded-xl p-10 text-center border border-slate-200 max-w-md mx-auto space-y-3">
+          <div className="w-10 h-10 rounded-lg bg-slate-100 text-slate-600 mx-auto flex items-center justify-center font-bold">
             <Building2 className="w-5 h-5" />
           </div>
-          <h3 className="font-bold text-slate-900 text-sm">No Competitors Found</h3>
+          <h3 className="font-semibold text-slate-900 text-sm">No Competitors Found</h3>
           <p className="text-xs text-slate-500">
             No organisations matched your current search and filter criteria.
           </p>
           <button
             onClick={handleResetFilters}
-            className="px-3.5 py-1.5 text-xs font-bold bg-purple-700 hover:bg-purple-800 text-white rounded-lg transition-colors cursor-pointer"
+            className="px-3 py-1.5 text-xs font-medium bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors cursor-pointer"
           >
             Clear Filters
           </button>
@@ -987,7 +1046,7 @@ export function CategoryCompetitorListPage({
       {/* 5. DIRECTORY: CARD VIEW OPTION (CLEAN BATTLECARD LIBRARY LAYOUT)           */}
       {/* ========================================================================= */}
       {viewMode === 'card' && filteredOrganisations.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filteredOrganisations.map(org => {
             const cleanIndustry = org.orgType || org.type || (Array.isArray(org.industry) ? org.industry[0] : org.industry) || org.category || 'Education & Technology';
             const cleanLocation = (() => {
@@ -1000,73 +1059,117 @@ export function CategoryCompetitorListPage({
               return org.city || org.district || 'Kerala';
             })();
 
+            const metrics = getCategoryPartnershipMetrics(org, categoryId);
+
             return (
               <div
                 key={org.id}
                 onClick={() => onSelectOrg(org)}
-                className="group bg-white rounded-2xl border border-purple-100 hover:border-purple-300 shadow-2xs hover:shadow-lg transition-all duration-200 p-5 flex flex-col justify-between min-h-[195px] cursor-pointer"
+                className="group bg-white rounded-xl border border-slate-200 hover:border-purple-300 hover:shadow-lg transition-all duration-200 p-4 sm:p-5 flex flex-col justify-between min-h-[220px] cursor-pointer"
               >
                 <div>
                   {/* Top: Logo / Monogram + Prominent Competitor Name */}
-                  <div className="flex items-center gap-3 mb-3.5">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0c0a1a] via-[#1a1236] to-[#261f42] text-purple-300 font-black text-sm flex items-center justify-center shrink-0 border border-purple-900/40 shadow-xs group-hover:scale-105 transition-transform">
+                  <div className="flex items-start gap-3 mb-2.5">
+                    <div className="w-10 h-10 rounded-xl bg-slate-900 text-purple-300 font-bold text-xs flex items-center justify-center shrink-0 shadow-xs border border-purple-900/30 group-hover:bg-purple-700 group-hover:text-white transition-colors">
                       {org.logoText || org.name.substring(0, 2).toUpperCase()}
                     </div>
-                    <h3 className="font-bold text-slate-900 text-base group-hover:text-purple-700 transition-colors line-clamp-1 leading-snug">
-                      {org.name}
-                    </h3>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <h3 className="font-bold text-slate-900 text-sm group-hover:text-purple-700 transition-colors line-clamp-1 leading-snug">
+                          {org.name}
+                        </h3>
+                        {org.isMultiSegment && (
+                          <span className="px-1.5 py-0.2 rounded text-[9.5px] font-mono font-semibold bg-purple-50 text-purple-700 border border-purple-200">
+                            Multi-Sector
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-slate-500 truncate flex items-center gap-1 mt-0.5">
+                        <MapPin className="w-3 h-3 text-purple-500 shrink-0" />
+                        <span>{cleanLocation}</span>
+                      </p>
+                    </div>
                   </div>
 
-                  {/* Exactly Two Key Information Items Beneath Name */}
-                  <div className="space-y-1.5 pl-0.5">
-                    {/* Item 1: Industry / Category */}
-                    <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
-                      <Building2 className="w-3.5 h-3.5 text-purple-600 shrink-0" />
-                      <span className="truncate">{cleanIndustry}</span>
+                  {/* Organisation Type & Partnership Type Badges */}
+                  <div className="space-y-2 pl-0.5 mt-2">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold border bg-purple-50 text-purple-800 border-purple-200">
+                        <span className="w-1.5 h-1.5 rounded-full bg-purple-600" />
+                        <span>{org.entityNatureLabel || 'External Service / Training Provider'}</span>
+                      </span>
+
+                      {metrics.partnershipType && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium border bg-slate-50 text-slate-700 border-slate-200">
+                          <Handshake className="w-3 h-3 text-purple-600" />
+                          <span className="truncate max-w-[180px]">{metrics.partnershipType}</span>
+                        </span>
+                      )}
                     </div>
 
-                    {/* Item 2: Location */}
-                    <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
-                      <MapPin className="w-3.5 h-3.5 text-purple-600 shrink-0" />
-                      <span className="truncate">{cleanLocation}</span>
+                    {/* Short Description */}
+                    {(org.primaryBusiness || org.companyOverview) && (
+                      <p className="text-[11px] text-slate-600 line-clamp-2 leading-relaxed">
+                        {org.primaryBusiness || org.companyOverview}
+                      </p>
+                    )}
+
+                    {/* Verified Partnerships Metric Pill */}
+                    <div className="flex items-center justify-between py-1.5 px-2.5 rounded-lg bg-slate-50 border border-slate-200/80 text-[11px] mt-2">
+                      <span className="font-semibold text-slate-500">
+                        {categoryId === 'schools' ? 'School Partnerships:' : categoryId === 'colleges' ? 'College Partnerships:' : categoryId === 'corporate' ? 'Corporate Clients:' : 'Institutional Partnerships:'}
+                      </span>
+                      <span className={`font-mono font-bold text-xs ${metrics.isVerified ? 'text-purple-700' : 'text-slate-500 italic'}`}>
+                        {metrics.verifiedCount}
+                      </span>
                     </div>
 
-                    {/* Item 3: Skill Category Badge(s) (For Schools Section) */}
-                    {categoryId === 'schools' && (
-                      <div className="flex flex-wrap gap-1 pt-1.5">
-                        {getCompetitorSkillCategories(org).map((cat, idx) => (
-                          <span
-                            key={idx}
-                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold border ${
-                              cat === 'Technical Skills'
-                                ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
-                                : 'bg-rose-50 text-rose-700 border-rose-200'
-                            }`}
-                          >
-                            {cat === 'Technical Skills' ? (
-                              <Cpu className="w-3 h-3 text-indigo-600 shrink-0" />
-                            ) : (
-                              <HeartHandshake className="w-3 h-3 text-rose-600 shrink-0" />
-                            )}
-                            <span>{cat}</span>
-                          </span>
-                        ))}
+                    {/* Primary Services Pills */}
+                    {metrics.programmes && metrics.programmes.length > 0 && (
+                      <div className="pt-1">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                          Primary Services:
+                        </span>
+                        <div className="flex flex-wrap gap-1">
+                          {metrics.programmes.slice(0, 3).map((prog, idx) => (
+                            <span
+                              key={idx}
+                              className="px-2 py-0.5 rounded text-[10px] font-medium bg-purple-50/70 text-purple-800 border border-purple-200/70 truncate max-w-[200px]"
+                            >
+                              {prog}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     )}
+
+                    {/* Confidence / Verification Indicator */}
+                    <div className="flex items-center justify-between text-[11px] pt-1">
+                      <span className="inline-flex items-center gap-1 font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full text-[10px]">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                        <span>{metrics.confidence}</span>
+                      </span>
+
+                      {metrics.evidenceUrl && (
+                        <span className="text-[10px] font-mono text-purple-600 truncate max-w-[140px]">
+                          {metrics.evidenceUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                {/* Single Prominent View Button */}
-                <div className="pt-4 mt-3 border-t border-purple-50">
+                {/* Prominent View Profile Button */}
+                <div className="pt-3 mt-3 border-t border-slate-150">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       onSelectOrg(org);
                     }}
-                    className="w-full py-2.5 px-4 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-2 px-3 rounded-lg bg-purple-50 hover:bg-purple-600 text-purple-700 hover:text-white font-bold text-xs border border-purple-200 hover:border-purple-600 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs group-hover:bg-purple-600 group-hover:text-white"
                   >
-                    <span>View</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    <span>View Profile</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
@@ -1079,19 +1182,19 @@ export function CategoryCompetitorListPage({
       {/* 6. DIRECTORY: TABLE VIEW OPTION (SPREADSHEET-STYLE COMPARISON)            */}
       {/* ========================================================================= */}
       {viewMode === 'table' && filteredOrganisations.length > 0 && (
-        <div className="bg-white rounded-2xl border border-purple-100 shadow-2xs overflow-hidden">
+        <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
           <div className="overflow-x-auto max-w-full">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-purple-50/70 border-b border-purple-100 text-[11px] font-bold text-slate-700 select-none">
+                <tr className="bg-slate-50 border-b border-slate-200 text-[11px] font-semibold text-slate-600 uppercase tracking-wider select-none">
                   
                   {/* 1. Organisation Name (Sticky Column) */}
                   <th
                     onClick={() => handleSort('name')}
-                    className="py-3 px-4 sticky left-0 bg-purple-50/95 backdrop-blur-xs z-10 cursor-pointer hover:text-purple-900"
+                    className="py-3 px-4 sticky left-0 bg-slate-50 z-10 cursor-pointer hover:text-slate-900 border-r border-slate-200"
                   >
                     <div className="flex items-center gap-1.5">
-                      <span>Organisation Name</span>
+                      <span>Organisation</span>
                       {sortField === 'name' ? (
                         sortDirection === 'asc' ? <ArrowUp className="w-3 h-3 text-purple-600" /> : <ArrowDown className="w-3 h-3 text-purple-600" />
                       ) : (
@@ -1103,7 +1206,7 @@ export function CategoryCompetitorListPage({
                   {/* 2. Location */}
                   <th
                     onClick={() => handleSort('location')}
-                    className="py-3 px-3 cursor-pointer hover:text-purple-900 whitespace-nowrap"
+                    className="py-3 px-3 cursor-pointer hover:text-slate-900 whitespace-nowrap"
                   >
                     <div className="flex items-center gap-1.5">
                       <span>Location</span>
@@ -1116,7 +1219,7 @@ export function CategoryCompetitorListPage({
                   {/* 3. District */}
                   <th
                     onClick={() => handleSort('district')}
-                    className="py-3 px-3 cursor-pointer hover:text-purple-900 whitespace-nowrap"
+                    className="py-3 px-3 cursor-pointer hover:text-slate-900 whitespace-nowrap"
                   >
                     <div className="flex items-center gap-1.5">
                       <span>District</span>
@@ -1129,19 +1232,19 @@ export function CategoryCompetitorListPage({
                   {/* Category-Specific Table Columns */}
                   {categoryId === 'schools' && (
                     <>
-                      <th className="py-3 px-3 min-w-[170px]">Skill Category</th>
+                      <th className="py-3 px-3 min-w-[160px]">Skill Focus</th>
                       <th className="py-3 px-3 min-w-[200px]">Main Services</th>
                       <th className="py-3 px-3 min-w-[180px]">Programmes</th>
-                      <th className="py-3 px-3 min-w-[150px]">Target Classes</th>
-                      <th className="py-3 px-3 min-w-[140px]">Delivery Mode</th>
+                      <th className="py-3 px-3 min-w-[140px]">Target Classes</th>
+                      <th className="py-3 px-3 min-w-[130px]">Delivery Mode</th>
                       <th className="py-3 px-3 min-w-[180px]">School Partnerships</th>
-                      <th className="py-3 px-3 min-w-[180px]">Partner Organisations</th>
+                      <th className="py-3 px-3 min-w-[180px]">Partners</th>
                     </>
                   )}
 
                   {categoryId === 'colleges' && (
                     <>
-                      <th className="py-3 px-3 min-w-[160px]">Institution Type</th>
+                      <th className="py-3 px-3 min-w-[150px]">Institution Type</th>
                       <th className="py-3 px-3 min-w-[200px]">Main Services</th>
                       <th className="py-3 px-3 min-w-[180px]">Programmes</th>
                       <th className="py-3 px-3 min-w-[180px]">Academic MoUs / Partnerships</th>
@@ -1150,17 +1253,17 @@ export function CategoryCompetitorListPage({
 
                   {categoryId === 'corporate' && (
                     <>
-                      <th className="py-3 px-3 min-w-[160px]">Industry</th>
+                      <th className="py-3 px-3 min-w-[150px]">Industry</th>
                       <th className="py-3 px-3 min-w-[200px]">Services</th>
-                      <th className="py-3 px-3 min-w-[180px]">Corporate Training Offerings</th>
-                      <th className="py-3 px-3 min-w-[160px]">Target Clients</th>
+                      <th className="py-3 px-3 min-w-[180px]">Corporate Training</th>
+                      <th className="py-3 px-3 min-w-[150px]">Target Clients</th>
                     </>
                   )}
 
                   {categoryId === 'other_partnerships' && (
                     <>
-                      <th className="py-3 px-3 min-w-[160px]">Organisation Type</th>
-                      <th className="py-3 px-3 min-w-[160px]">Partnership Role</th>
+                      <th className="py-3 px-3 min-w-[150px]">Organisation Type</th>
+                      <th className="py-3 px-3 min-w-[150px]">Partnership Role</th>
                       <th className="py-3 px-3 min-w-[180px]">Related Programmes</th>
                       <th className="py-3 px-3 min-w-[180px]">Connected Partners</th>
                     </>
@@ -1169,10 +1272,10 @@ export function CategoryCompetitorListPage({
                   {/* Status Column */}
                   <th
                     onClick={() => handleSort('status')}
-                    className="py-3 px-3 cursor-pointer hover:text-purple-900 whitespace-nowrap text-center"
+                    className="py-3 px-3 cursor-pointer hover:text-slate-900 whitespace-nowrap text-center"
                   >
                     <div className="flex items-center justify-center gap-1.5">
-                      <span>Verification</span>
+                      <span>Status</span>
                       {sortField === 'status' && (
                         sortDirection === 'asc' ? <ArrowUp className="w-3 h-3 text-purple-600" /> : <ArrowDown className="w-3 h-3 text-purple-600" />
                       )}
@@ -1186,7 +1289,7 @@ export function CategoryCompetitorListPage({
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-purple-50">
+              <tbody className="divide-y divide-slate-150">
                 {filteredOrganisations.map((org, rowIndex) => {
                   const isDeLead = org.id === 'org-delead-01';
                   const programmes = org.relevantProgrammes || [];
@@ -1195,17 +1298,17 @@ export function CategoryCompetitorListPage({
                     <tr
                       key={org.id}
                       onClick={() => onSelectOrg(org)}
-                      className={`hover:bg-purple-50/50 transition-colors cursor-pointer group ${
-                        isDeLead ? 'bg-purple-50/20' : rowIndex % 2 === 1 ? 'bg-slate-50/30' : 'bg-white'
+                      className={`hover:bg-slate-50 transition-colors cursor-pointer group ${
+                        isDeLead ? 'bg-purple-50/20' : rowIndex % 2 === 1 ? 'bg-slate-50/40' : 'bg-white'
                       }`}
                     >
                       {/* 1. Name & Monogram (Sticky Left Column) */}
-                      <td className="py-3 px-4 sticky left-0 bg-white group-hover:bg-purple-50/90 transition-colors z-10 font-bold text-slate-900 whitespace-nowrap border-r border-purple-50">
+                      <td className="py-3 px-4 sticky left-0 bg-white group-hover:bg-slate-50 transition-colors z-10 font-medium text-slate-900 whitespace-nowrap border-r border-slate-200">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-7 h-7 rounded-lg bg-purple-50 text-purple-800 border border-purple-200 flex items-center justify-center font-black text-[10px] shrink-0">
+                          <div className="w-7 h-7 rounded-md bg-slate-900 text-white flex items-center justify-center font-bold text-[10px] shrink-0">
                             {org.logoText || org.name.substring(0, 2).toUpperCase()}
                           </div>
-                          <span className="group-hover:text-purple-700 transition-colors">
+                          <span className="group-hover:text-purple-600 transition-colors font-semibold">
                             {org.name}
                           </span>
                         </div>
@@ -1229,14 +1332,14 @@ export function CategoryCompetitorListPage({
                               {getCompetitorSkillCategories(org).map((cat, idx) => (
                                 <span
                                   key={idx}
-                                  className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold border whitespace-nowrap ${
+                                  className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium border whitespace-nowrap ${
                                     cat === 'Technical Skills'
-                                      ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                                      ? 'bg-purple-50 text-purple-700 border-purple-200'
                                       : 'bg-rose-50 text-rose-700 border-rose-200'
                                   }`}
                                 >
                                   {cat === 'Technical Skills' ? (
-                                    <Cpu className="w-2.5 h-2.5 text-indigo-600 shrink-0" />
+                                    <Cpu className="w-2.5 h-2.5 text-purple-600 shrink-0" />
                                   ) : (
                                     <HeartHandshake className="w-2.5 h-2.5 text-rose-600 shrink-0" />
                                   )}
@@ -1251,7 +1354,7 @@ export function CategoryCompetitorListPage({
                           <td className="py-3 px-3 text-slate-800">
                             <div className="flex flex-wrap gap-1">
                               {programmes.map((p, idx) => (
-                                <span key={idx} className="px-1.5 py-0.5 rounded bg-purple-50 text-purple-900 border border-purple-200/60 font-semibold text-[11px] whitespace-nowrap">
+                                <span key={idx} className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-200 font-medium text-[11px] whitespace-nowrap">
                                   {p}
                                 </span>
                               ))}
@@ -1283,7 +1386,7 @@ export function CategoryCompetitorListPage({
                           <td className="py-3 px-3 text-slate-800">
                             <div className="flex flex-wrap gap-1">
                               {programmes.map((p, idx) => (
-                                <span key={idx} className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-900 border border-blue-200/60 font-semibold text-[11px] whitespace-nowrap">
+                                <span key={idx} className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-200 font-medium text-[11px] whitespace-nowrap">
                                   {p}
                                 </span>
                               ))}
@@ -1306,7 +1409,7 @@ export function CategoryCompetitorListPage({
                           <td className="py-3 px-3 text-slate-800">
                             <div className="flex flex-wrap gap-1">
                               {programmes.map((p, idx) => (
-                                <span key={idx} className="px-1.5 py-0.5 rounded bg-fuchsia-50 text-fuchsia-900 border border-fuchsia-200/60 font-semibold text-[11px] whitespace-nowrap">
+                                <span key={idx} className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-200 font-medium text-[11px] whitespace-nowrap">
                                   {p}
                                 </span>
                               ))}
@@ -1329,7 +1432,7 @@ export function CategoryCompetitorListPage({
                           <td className="py-3 px-3 text-slate-800">
                             <div className="flex flex-wrap gap-1">
                               {programmes.map((p, idx) => (
-                                <span key={idx} className="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-900 border border-emerald-200/60 font-semibold text-[11px] whitespace-nowrap">
+                                <span key={idx} className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-200 font-medium text-[11px] whitespace-nowrap">
                                   {p}
                                 </span>
                               ))}
@@ -1343,7 +1446,7 @@ export function CategoryCompetitorListPage({
 
                       {/* Status */}
                       <td className="py-3 px-3 text-center whitespace-nowrap">
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
                           <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                           <span>{org.verificationStatus === 'verified' ? 'Verified' : 'Official'}</span>
                         </span>
@@ -1356,9 +1459,9 @@ export function CategoryCompetitorListPage({
                             e.stopPropagation();
                             onSelectOrg(org);
                           }}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-purple-700 hover:text-white hover:bg-purple-700 border border-purple-200 transition-all cursor-pointer"
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium text-purple-600 hover:text-white hover:bg-purple-600 border border-purple-200 transition-all cursor-pointer"
                         >
-                          <span>View Intelligence</span>
+                          <span>Profile</span>
                           <ArrowRight className="w-3 h-3" />
                         </button>
                       </td>

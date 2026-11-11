@@ -1,8 +1,9 @@
 // EDGE Competitor Intelligence & Market Research Hub
 // Demonstration Research Dataset - Carefully structured based on real Kerala institutions and edtech ecosystem
 // Priority District: Kozhikode, with coverage across all 14 Kerala districts and pan-India scalable taxonomy.
+import { PARTNERSHIP_CLASSIFICATION_MAP } from './partnershipClassificationData.js';
 
-export const SEED_ORGANISATIONS = [
+const RAW_SEED_ORGANISATIONS = [
   // ==================== SEGMENT A: SCHOOLS ====================
   {
     id: "org-sch-01",
@@ -3407,6 +3408,26 @@ export const SEED_ORGANISATIONS = [
     lastVerifiedDate: "2026-03-25"
   }
 ];
+
+export const SEED_ORGANISATIONS = RAW_SEED_ORGANISATIONS.map(org => {
+  const p = PARTNERSHIP_CLASSIFICATION_MAP[org.id];
+  if (!p) return org;
+  return {
+    ...org,
+    entityNature: p.entityNature,
+    entityNatureLabel: p.entityNatureLabel,
+    primaryBusiness: p.primaryBusiness,
+    partnershipTargets: p.partnershipTargets,
+    serviceProvided: p.serviceProvided,
+    programmeType: p.programmeType,
+    deliveryModel: p.deliveryModel || org.deliveryMethod,
+    evidenceSource: p.evidenceSource,
+    confidenceLevel: p.confidenceLevel,
+    partnershipCategories: p.partnershipCategories,
+    isMultiSegment: p.isMultiSegment,
+    partnershipClassification: p
+  };
+});
 
 export const SEED_COURSES = [
   {

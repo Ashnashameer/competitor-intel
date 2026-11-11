@@ -4,76 +4,100 @@ import {
   Landmark, 
   Briefcase, 
   Users, 
-  ArrowRight 
+  ArrowRight
 } from 'lucide-react';
-import { MARKET_CATEGORIES, getCategoryCompetitorCounts } from '../data/categoryRelationships';
+import { getCategoryCompetitorCounts } from '../data/categoryRelationships';
 import { useData } from '../context/DataContext';
 
+/**
+ * CompetitorCategoriesPage:
+ * Pure four-card category selection screen.
+ * Contains ONLY the four category cards: SCHOOLS, COLLEGES & UNIVERSITIES, CORPORATE, OTHER PARTNERSHIPS.
+ * No descriptions, no extra headings, no subtitles, no search, no filters.
+ */
 export function CompetitorCategoriesPage({ onSelectCategory }) {
   const { organisations } = useData();
 
-  // Dynamic counts for each of the 4 categories from existing database
+  // Dynamic counts for each of the 4 categories from verified database
   const categoryCounts = React.useMemo(() => {
     return getCategoryCompetitorCounts(organisations);
   }, [organisations]);
 
-  const getCategoryIcon = (iconName) => {
-    switch (iconName) {
-      case 'GraduationCap':
-        return GraduationCap;
-      case 'Landmark':
-        return Landmark;
-      case 'Briefcase':
-        return Briefcase;
-      case 'Users':
-      default:
-        return Users;
+  const CATEGORIES = [
+    {
+      id: 'schools',
+      name: 'SCHOOLS',
+      icon: GraduationCap,
+      countKey: 'schools'
+    },
+    {
+      id: 'colleges',
+      name: 'COLLEGES & UNIVERSITIES',
+      icon: Landmark,
+      countKey: 'colleges'
+    },
+    {
+      id: 'corporate',
+      name: 'CORPORATE',
+      icon: Briefcase,
+      countKey: 'corporate'
+    },
+    {
+      id: 'other_partnerships',
+      name: 'OTHER PARTNERSHIPS',
+      icon: Users,
+      countKey: 'other_partnerships'
     }
-  };
+  ];
 
   return (
-    <div className="w-full max-w-5xl mx-auto py-6 sm:py-10 lg:py-14 animate-in fade-in duration-300">
-      {/* Only Four Category Cards: Clean, Spacious, and Premium Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-        {MARKET_CATEGORIES.map((cat) => {
-          const Icon = getCategoryIcon(cat.icon);
-          const count = categoryCounts[cat.id] || 0;
+    <div className="w-full max-w-4xl mx-auto py-8 sm:py-12 px-4 sm:px-6">
+      {/* Balanced 2x2 Category Cards Grid - Refined & Compact */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+        {CATEGORIES.map((cat) => {
+          const Icon = cat.icon;
+          const count = categoryCounts[cat.countKey] || 0;
 
           return (
             <div
               key={cat.id}
               onClick={() => onSelectCategory(cat.id)}
-              className="group relative bg-white/95 backdrop-blur-sm rounded-3xl p-7 lg:p-8 border border-purple-100/90 hover:border-purple-300 shadow-xs hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between min-h-[220px] overflow-hidden hover:scale-[1.01]"
+              className="group relative rounded-xl p-5 sm:p-7 bg-white border border-slate-200/90 hover:border-purple-400 hover:shadow-xl hover:shadow-purple-950/10 transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden text-left hover:-translate-y-1 min-h-[190px]"
             >
-              {/* Subtle ambient hover glow */}
-              <div className="absolute -top-16 -right-16 w-44 h-44 bg-purple-600/5 group-hover:bg-purple-600/15 rounded-full blur-2xl transition-all pointer-events-none" />
+              {/* Subtle Watermark Icon */}
+              <Icon 
+                className="absolute -right-3 -bottom-3 w-32 h-32 pointer-events-none text-slate-900/[0.025] group-hover:text-purple-600/[0.05] group-hover:scale-105 transition-all duration-500" 
+                aria-hidden="true"
+              />
+
+              {/* Top Accent Highlight */}
+              <div className="absolute inset-x-0 top-0 h-1 bg-transparent group-hover:bg-gradient-to-r group-hover:from-purple-500 group-hover:via-purple-600 group-hover:to-indigo-600 transition-all duration-300" />
 
               <div>
-                {/* Top Row: Icon Emblem + Dynamic Count Badge */}
-                <div className="flex items-center justify-between mb-6">
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${cat.accentGradient} text-white flex items-center justify-center shadow-md shadow-purple-900/15 group-hover:scale-105 transition-transform duration-300`}>
-                    <Icon className="w-7 h-7" />
+                {/* Top Row: Refined Icon + Entity Count Indicator */}
+                <div className="flex items-center justify-between gap-3 mb-3.5 relative z-10">
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-purple-50 text-purple-700 ring-1 ring-purple-100/90 group-hover:bg-purple-600 group-hover:text-white group-hover:shadow-md group-hover:shadow-purple-500/25 transition-all duration-300 flex items-center justify-center shrink-0">
+                    <Icon className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-300 group-hover:scale-110" />
                   </div>
 
-                  <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold font-mono tracking-tight bg-purple-50 text-purple-900 border border-purple-200/80 shadow-2xs">
-                    <span className="w-2 h-2 rounded-full bg-purple-600 animate-pulse" />
-                    {count} {count === 1 ? 'Competitor' : 'Competitors'}
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold tracking-tight bg-slate-100 text-slate-700 border border-slate-200 group-hover:bg-purple-50 group-hover:text-purple-900 group-hover:border-purple-200 transition-colors">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    <span>{count} {count === 1 ? 'Entity' : 'Entities'}</span>
                   </span>
                 </div>
 
-                {/* Category Title Only */}
-                <h2 className="text-2xl font-bold text-slate-900 group-hover:text-purple-700 transition-colors tracking-tight">
-                  {cat.title}
+                {/* Refined Category Name */}
+                <h2 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 group-hover:text-purple-700 uppercase transition-colors relative z-10 font-sans mt-2">
+                  {cat.name}
                 </h2>
               </div>
 
-              {/* Bottom Explore CTA Action */}
-              <div className="pt-5 border-t border-purple-100/80 flex items-center justify-between text-xs font-bold text-purple-700 group-hover:text-purple-900 mt-6">
-                <span className="group-hover:underline">
-                  Explore {cat.title}
-                </span>
-                <div className="w-8 h-8 rounded-full bg-purple-50 group-hover:bg-purple-600 text-purple-700 group-hover:text-white flex items-center justify-center transition-all shadow-2xs group-hover:translate-x-1">
-                  <ArrowRight className="w-4 h-4" />
+              {/* Bottom Row: Clear Explore Interaction */}
+              <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-purple-700 group-hover:text-purple-900 transition-colors relative z-10">
+                <span className="tracking-wide">Explore {cat.name}</span>
+                <div className="flex items-center gap-1.5 group-hover:translate-x-1.5 transition-transform duration-300">
+                  <span className="text-[11px] font-mono font-semibold uppercase tracking-wider">Explore</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-purple-600 group-hover:text-purple-900" />
                 </div>
               </div>
             </div>

@@ -90,7 +90,7 @@ export function SegmentView({
       <div className="bg-white rounded-2xl border border-purple-100 p-6 shadow-xs">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="flex items-start gap-3.5">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700 text-white flex items-center justify-center font-black text-xl shrink-0 shadow-md shadow-purple-600/30">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 via-purple-600 to-purple-700 text-white flex items-center justify-center font-black text-xl shrink-0 shadow-md shadow-purple-600/30">
               {segmentConfig.code}
             </div>
             <div>
@@ -121,7 +121,7 @@ export function SegmentView({
             </button>
             <button
               onClick={onOpenAddModal}
-              className="px-3.5 py-2 text-xs font-semibold text-white bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-violet-700 hover:to-purple-700 rounded-lg shadow-sm shadow-purple-600/30 flex items-center gap-1.5"
+              className="px-3.5 py-2 text-xs font-semibold text-white bg-gradient-to-r from-violet-600 via-purple-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 rounded-lg shadow-sm shadow-purple-600/30 flex items-center gap-1.5"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Record</span>

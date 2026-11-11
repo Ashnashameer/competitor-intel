@@ -41,7 +41,7 @@ export function SchoolDetailModal({ school, isOpen, onClose, onSelectProgramme }
         {/* Modal Header */}
         <div className="sticky top-0 z-20 bg-gradient-to-r from-[#0c0a1a] via-[#16122d] to-[#0c0a1a] text-white px-6 py-4 flex items-center justify-between border-b border-purple-900/60 shadow-md">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 text-white flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-purple-600 text-white flex items-center justify-center font-bold">
               <School className="w-5 h-5" />
             </div>
             <div>
@@ -229,7 +229,7 @@ export function SchoolDetailModal({ school, isOpen, onClose, onSelectProgramme }
           </div>
 
           {/* Strategic Opportunity Assessment */}
-          <div className="p-4 bg-gradient-to-br from-purple-900 to-indigo-950 text-white rounded-2xl shadow-sm space-y-2">
+          <div className="p-4 bg-gradient-to-br from-purple-900 to-purple-950 text-white rounded-2xl shadow-sm space-y-2">
             <div className="flex items-center gap-1.5 text-purple-300 text-xs font-mono uppercase tracking-wider font-bold">
               <Sparkles className="w-3.5 h-3.5" />
               <span>EDGE Strategic Opportunity</span>

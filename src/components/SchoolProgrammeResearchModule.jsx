@@ -463,7 +463,7 @@ export function SchoolProgrammeResearchModule({ activeDistrict, onDistrictChange
                     </div>
                     <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden flex">
                       <div style={{ width: `${org.governmentPrivateCoverage.private}%` }} className="bg-purple-600 h-full" title={`Private: ${org.governmentPrivateCoverage.private}%`} />
-                      <div style={{ width: `${org.governmentPrivateCoverage.aided}%` }} className="bg-indigo-400 h-full" title={`Aided: ${org.governmentPrivateCoverage.aided}%`} />
+                      <div style={{ width: `${org.governmentPrivateCoverage.aided}%` }} className="bg-purple-400 h-full" title={`Aided: ${org.governmentPrivateCoverage.aided}%`} />
                       <div style={{ width: `${org.governmentPrivateCoverage.government}%` }} className="bg-emerald-400 h-full" title={`Govt: ${org.governmentPrivateCoverage.government}%`} />
                     </div>
                   </div>
@@ -964,7 +964,7 @@ export function SchoolProgrammeResearchModule({ activeDistrict, onDistrictChange
         {/* ===================================================================== */}
         {subTab === 'opportunities' && (
           <div className="space-y-5">
-            <div className="bg-gradient-to-r from-purple-900 to-indigo-950 text-white rounded-2xl p-5 shadow-sm space-y-2">
+            <div className="bg-gradient-to-r from-purple-900 to-purple-950 text-white rounded-2xl p-5 shadow-sm space-y-2">
               <div className="flex items-center gap-2 text-purple-300 text-xs font-mono uppercase tracking-wider font-bold">
                 <Sparkles className="w-4 h-4" />
                 <span>MYST Executive Strategic Brief</span>

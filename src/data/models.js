@@ -1,4 +1,10 @@
 // Standard taxonomies and constants for EDGE Competitor Intelligence
+import { 
+  PARTNERSHIP_CLASSIFICATION_MAP, 
+  orgMatchesPartnershipCategory as checkOrgMatchesPartnershipCategory,
+  isExternalProvider as checkIsExternalProvider,
+  isEducationalInstitution as checkIsEducationalInstitution
+} from './partnershipClassificationData.js';
 
 export const MAIN_CATEGORIES = [
   {
@@ -35,14 +41,51 @@ export const MAIN_CATEGORIES = [
   }
 ];
 
+export const ENTITY_NATURES = [
+  { id: "all", label: "All Entity Types", shortLabel: "All" },
+  { id: "external_provider", label: "External Service Providers", shortLabel: "External Providers" },
+  { id: "institution", label: "Educational Institutions Themselves", shortLabel: "Institutions Themselves" }
+];
+
 export function getOrgCategory(org) {
   if (!org) return 'Other Partnerships';
   if (org.category) return org.category;
+  
+  const classification = PARTNERSHIP_CLASSIFICATION_MAP[org.id] || org.partnershipClassification;
+  if (classification && classification.partnershipCategories && classification.partnershipCategories.length > 0) {
+    const primary = classification.partnershipCategories[0];
+    if (primary === 'schools') return 'Schools';
+    if (primary === 'colleges') return 'Colleges & Universities';
+    if (primary === 'corporate') return 'Corporate';
+    if (primary === 'other_partnerships') return 'Other Partnerships';
+  }
+
   if (org.segment === 'schools' || org.segment === 'higher_secondary') return 'Schools';
   if (org.segment === 'colleges') return 'Colleges & Universities';
   if (org.segment === 'agencies_edtech') return 'Corporate';
   if (org.segment === 'training_institutes') return 'Other Partnerships';
   return 'Other Partnerships';
+}
+
+export function orgMatchesCategory(org, categoryName) {
+  return checkOrgMatchesPartnershipCategory(org, categoryName);
+}
+
+export function isExternalProvider(org) {
+  return checkIsExternalProvider(org);
+}
+
+export function isEducationalInstitution(org) {
+  return checkIsEducationalInstitution(org);
+}
+
+export function getOrgPartnershipCategories(org) {
+  if (!org || !org.id) return [];
+  const classification = PARTNERSHIP_CLASSIFICATION_MAP[org.id] || org.partnershipClassification;
+  if (classification && classification.partnershipCategories) {
+    return classification.partnershipCategories;
+  }
+  return [org.segment || 'schools'];
 }
 
 export const SEGMENTS = [

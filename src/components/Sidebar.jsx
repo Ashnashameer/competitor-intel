@@ -1,25 +1,33 @@
 import React from 'react';
 import {
-  Home,
   LayoutDashboard,
   Building2,
-  GraduationCap,
-  Briefcase,
-  Users,
-  Landmark,
   GitCompare,
   FileCheck2,
-  RotateCcw,
-  Layers,
-  Sparkles,
-  Target,
   TrendingUp,
-  Activity
+  RotateCcw,
+  ArrowLeft,
+  X
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
-import { MystEdgeLogo } from './MystEdgeLogo';
+import edgeCircleLogo from '../assets/edge_logo_circle.png';
 import { getCategoryCompetitorCounts } from '../data/categoryRelationships';
 
+/**
+ * Sidebar:
+ * Clean, human-designed navigation for EDGE Competitor Intel.
+ * 
+ * Features:
+ * - Reduced to 5 crystal-clear, human-friendly primary options:
+ *   1. Overview (Dashboard, metrics, quick start)
+ *   2. Find Competitors (All 51 organisations + instant category filtering)
+ *   3. Compare Competitors (Side-by-side benchmark & courses)
+ *   4. Market Insights (Strategy battlecards, trends, activity tracker)
+ *   5. Research Sources (50 verified citations & audit records)
+ * - Clean light neutral SaaS styling (Slate-50 background, crisp borders)
+ * - Obvious active states with solid indigo accents
+ * - Responsive mobile drawer
+ */
 export function Sidebar({ 
   activeTab, 
   setActiveTab, 
@@ -34,239 +42,218 @@ export function Sidebar({
     return getCategoryCompetitorCounts(organisations);
   }, [organisations]);
 
-  const CATEGORY_ITEMS = [
-    { id: 'schools', label: 'Schools', icon: GraduationCap, count: categoryCounts.schools },
-    { id: 'colleges', label: 'Colleges', icon: Landmark, count: categoryCounts.colleges },
-    { id: 'corporate', label: 'Corporate', icon: Briefcase, count: categoryCounts.corporate },
-    { id: 'other_partnerships', label: 'Other Partnerships', icon: Users, count: categoryCounts.other_partnerships },
+  // Exactly 5 human-understandable primary navigation items
+  const NAV_ITEMS = [
+    {
+      id: 'overview',
+      label: 'Overview',
+      icon: LayoutDashboard,
+      description: 'Summary & quick start'
+    },
+    {
+      id: 'categories',
+      label: 'Find Competitors',
+      icon: Building2,
+      count: statistics.total || organisations.length,
+      description: 'Search all 51 organisations',
+      matchTabs: ['organisations', 'directory', 'categories', 'category-detail', 'schools', 'colleges', 'corporate', 'other_partnerships']
+    },
+    {
+      id: 'compare',
+      label: 'Compare Competitors',
+      icon: GitCompare,
+      description: 'Side-by-side benchmark',
+      matchTabs: ['compare', 'comparison', 'courses']
+    },
+    {
+      id: 'insights',
+      label: 'Market Insights',
+      icon: TrendingUp,
+      description: 'Trends & battlecards',
+      matchTabs: ['strategy', 'trends', 'activities', 'insights']
+    },
+    {
+      id: 'sources',
+      label: 'Research Sources',
+      icon: FileCheck2,
+      count: researchSources ? researchSources.length : 50,
+      description: 'Verified citations & evidence',
+      matchTabs: ['sources']
+    }
   ];
 
-  const TOOL_ITEMS = [
-    { id: 'overview', label: 'Market Overview', icon: LayoutDashboard },
-    { id: 'organisations', label: 'All Organisations', icon: Building2, count: statistics.total },
-    { id: 'compare', label: 'Compare Rivals', icon: GitCompare },
-    { id: 'sources', label: 'Research Sources', icon: FileCheck2, count: researchSources ? researchSources.length : null },
-  ];
+  const handleItemClick = (item) => {
+    if (item.id === 'insights') {
+      setActiveTab('strategy');
+    } else {
+      setActiveTab(item.id);
+    }
+    setIsOpen(false);
+  };
 
-  const STRATEGIC_ITEMS = [
-    { id: 'strategy', label: 'Competitive Strategy', icon: Target },
-    { id: 'trends', label: 'Market Trends', icon: TrendingUp },
-    { id: 'activities', label: 'Activity Tracker', icon: Activity },
-  ];
+  const isItemActive = (item) => {
+    if (item.matchTabs) {
+      return item.matchTabs.includes(activeTab);
+    }
+    return activeTab === item.id;
+  };
 
   return (
     <>
       {/* Mobile Backdrop */}
       {isOpen && (
         <div 
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs lg:hidden"
+          className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-xs lg:hidden"
           onClick={() => setIsOpen(false)}
+          aria-hidden="true"
         />
       )}
 
       {/* Sidebar Container: Selective Dark Purple Gradient */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-gradient-to-b from-[#0c0a1a] via-[#120f26] to-[#0a0817] text-slate-200 flex flex-col border-r border-[#241e3d] shadow-xl transition-transform duration-200 ease-in-out lg:static lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-gradient-to-b from-[#0c0a1a] via-[#120f26] to-[#0a0817] text-slate-200 flex flex-col border-r border-[#241e3d] shadow-xl lg:shadow-none transition-transform duration-200 ease-in-out lg:static lg:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Brand Header */}
-        <div 
-          onClick={() => {
-            setActiveTab('welcome');
-            setIsOpen(false);
-          }}
-          className="p-4 border-b border-[#241e3d]/80 bg-[#090714]/60 cursor-pointer hover:bg-white/[0.02] transition-colors"
-          title="Return to Welcome Screen"
-        >
-          <MystEdgeLogo size="lg" showSub={true} />
+        <div className="p-4 border-b border-[#241e3d]/80 bg-[#090714]/60">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-full overflow-hidden ring-1 ring-purple-400/40 shadow-xs shrink-0">
+                <img 
+                  src={edgeCircleLogo} 
+                  alt="EDGE Logo" 
+                  className="w-full h-full object-cover" 
+                />
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="text-xs font-bold text-white tracking-wider font-mono">
+                  EDGE INTEL
+                </span>
+                <span className="text-[9px] font-semibold text-purple-300 tracking-wider uppercase font-mono">
+                  A MYST INITIATIVE
+                </span>
+              </div>
+            </div>
 
-          <div className="mt-3 pt-2.5 border-t border-[#241e3d]/60 flex items-center justify-between text-[11px]">
-            <span className="text-slate-400">Competitive Intelligence</span>
-            <span className="text-purple-300 font-semibold tracking-wide">Kerala Focus</span>
+            {/* Mobile Close Button */}
+            <button
+              onClick={() => setIsOpen(false)}
+              className="lg:hidden p-1 rounded-md text-slate-400 hover:text-white hover:bg-white/10"
+              aria-label="Close sidebar"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
-        </div>
 
-        {/* Scrollable Navigation Area */}
-        <div className="flex-1 px-3 py-4 space-y-4 overflow-y-auto">
-          
-          {/* Home Link */}
+          {/* Quick Return to Landing Page */}
           <button
             onClick={() => {
               setActiveTab('welcome');
               setIsOpen(false);
             }}
-            className="w-full flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/[0.06] transition-colors text-left cursor-pointer"
+            className="mt-3 w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[11px] text-slate-300 hover:text-white transition-colors cursor-pointer border border-[#241e3d]"
           >
-            <Home className="w-4 h-4 text-purple-300/70" />
-            <span>Hero Landing</span>
+            <span className="flex items-center gap-1.5 font-medium">
+              <ArrowLeft className="w-3 h-3 text-purple-400" />
+              <span>Landing Page</span>
+            </span>
+            <span className="text-[10px] text-purple-300/80 font-mono">Exit</span>
           </button>
+        </div>
 
-          {/* Primary Hub: Competitor Categories */}
-          <div>
-            <div className="px-3 mb-1.5 flex items-center justify-between">
-              <span className="font-mono text-[9px] tracking-wider text-purple-300/60 uppercase font-bold">
-                PRIMARY ENTRY POINTS
+        {/* Navigation Items */}
+        <div className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          <div className="px-2 pb-1.5">
+            <span className="text-[9.5px] font-mono font-bold text-purple-300/60 tracking-wider uppercase">
+              MAIN MENU
+            </span>
+          </div>
+
+          {NAV_ITEMS.map((item) => {
+            const Icon = item.icon;
+            const active = isItemActive(item);
+
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleItemClick(item)}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs transition-all text-left cursor-pointer ${
+                  active
+                    ? 'bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 text-white font-semibold shadow-md shadow-purple-950/60 ring-1 ring-purple-400/40'
+                    : 'text-slate-300 hover:text-white hover:bg-white/[0.06] font-medium'
+                }`}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-white' : 'text-purple-300/70'}`} />
+                  <div className="min-w-0">
+                    <div className="truncate">{item.label}</div>
+                    <div className={`text-[10px] font-normal truncate ${active ? 'text-purple-100' : 'text-slate-400'}`}>{item.description}</div>
+                  </div>
+                </div>
+
+                {item.count !== undefined && item.count !== null && (
+                  <span
+                    className={`ml-2 px-1.5 py-0.5 rounded text-[10px] font-mono font-medium shrink-0 ${
+                      active
+                        ? 'bg-white/20 text-white border border-white/30'
+                        : 'bg-white/10 text-slate-300'
+                    }`}
+                  >
+                    {item.count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+
+          {/* Quick Category Jump Sub-Section */}
+          <div className="pt-4 mt-4 border-t border-[#241e3d]">
+            <div className="px-2 pb-2">
+              <span className="text-[9.5px] font-mono font-bold text-purple-300/60 tracking-wider uppercase">
+                BROWSE BY SEGMENT
               </span>
             </div>
 
-            <button
-              onClick={() => {
-                setActiveTab('categories');
-                setIsOpen(false);
-              }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs transition-all text-left mb-1.5 cursor-pointer ${
-                activeTab === 'categories'
-                  ? 'bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 text-white font-bold shadow-md shadow-purple-950/60 ring-1 ring-purple-400/40'
-                  : 'text-slate-200 hover:text-white hover:bg-white/[0.06] font-semibold bg-white/[0.02] border border-[#241e3d]/50'
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <Layers className={`w-4 h-4 ${activeTab === 'categories' ? 'text-white' : 'text-purple-400'}`} />
-                <span>Competitor Categories</span>
-              </div>
-              <span className="px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-purple-500/30 text-purple-200 border border-purple-400/30">
-                4 Verticals
-              </span>
-            </button>
-
-            {/* 4 Category Sub-Links */}
-            <div className="space-y-1 pl-2">
-              {CATEGORY_ITEMS.map(item => {
-                const Icon = item.icon;
-                const isSelected = (activeTab === 'category-detail' && selectedCategory === item.id) || activeTab === item.id;
+            <div className="space-y-0.5">
+              {[
+                { id: 'schools', label: 'Schools', count: categoryCounts.schools },
+                { id: 'colleges', label: 'Colleges', count: categoryCounts.colleges },
+                { id: 'corporate', label: 'Corporate', count: categoryCounts.corporate },
+                { id: 'other_partnerships', label: 'Partnerships', count: categoryCounts.other_partnerships },
+              ].map(cat => {
+                const isCatActive = (activeTab === 'category-detail' && selectedCategory === cat.id) || activeTab === cat.id;
 
                 return (
                   <button
-                    key={item.id}
+                    key={cat.id}
                     onClick={() => {
-                      if (onSelectCategory) {
-                        onSelectCategory(item.id);
-                      } else {
-                        setActiveTab(item.id);
-                      }
+                      if (onSelectCategory) onSelectCategory(cat.id);
+                      else setActiveTab('category-detail');
                       setIsOpen(false);
                     }}
-                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-all text-left cursor-pointer ${
-                      isSelected
-                        ? 'bg-purple-700/80 text-white font-bold shadow-xs border border-purple-500/50'
-                        : 'text-slate-300 hover:text-white hover:bg-white/[0.05] font-medium'
+                    className={`w-full flex items-center justify-between px-3 py-1.5 rounded-md text-[11px] transition-colors text-left cursor-pointer ${
+                      isCatActive
+                        ? 'bg-purple-950/70 text-purple-200 font-semibold border border-purple-800/40 shadow-xs'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.03]'
                     }`}
                   >
-                    <div className="flex items-center gap-2.5">
-                      <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-purple-400/70'}`} />
-                      <span>{item.label}</span>
-                    </div>
-
-                    <span
-                      className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono font-semibold ${
-                        isSelected
-                          ? 'bg-white/20 text-white'
-                          : 'bg-purple-950/80 text-purple-300 border border-purple-800/60'
-                      }`}
-                    >
-                      {item.count}
+                    <span className="truncate">{cat.label}</span>
+                    <span className="text-[10px] font-mono text-purple-300/70">
+                      {cat.count}
                     </span>
                   </button>
                 );
               })}
             </div>
           </div>
-
-          {/* Analysis & Market Tools */}
-          <div className="pt-2 border-t border-[#241e3d]/60">
-            <div className="px-3 mb-2">
-              <span className="font-mono text-[9px] tracking-wider text-purple-300/60 uppercase font-bold">
-                ANALYSIS & TOOLS
-              </span>
-            </div>
-
-            <div className="space-y-1">
-              {TOOL_ITEMS.map(item => {
-                const Icon = item.icon;
-                const isActive = activeTab === item.id || (activeTab === 'comparison' && item.id === 'compare');
-
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setActiveTab(item.id);
-                      setIsOpen(false);
-                    }}
-                    className={`w-full flex items-center justify-between px-3.5 py-2 rounded-lg text-xs transition-all text-left cursor-pointer ${
-                      isActive
-                        ? 'bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 text-white font-semibold shadow-xs'
-                        : 'text-slate-300 hover:text-white hover:bg-white/[0.05] font-medium'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-purple-300/70'}`} />
-                      <span>{item.label}</span>
-                    </div>
-
-                    {item.count !== undefined && item.count !== null && (
-                      <span
-                        className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono font-semibold ${
-                          isActive
-                            ? 'bg-white/20 text-white'
-                            : 'bg-purple-950/80 text-purple-300 border border-purple-800/60'
-                        }`}
-                      >
-                        {item.count}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Strategic Intelligence Section */}
-          <div className="pt-2 border-t border-[#241e3d]/60">
-            <div className="px-3 mb-2 flex items-center justify-between">
-              <span className="font-mono text-[9px] tracking-wider text-purple-300/60 uppercase font-bold">
-                STRATEGIC INTELLIGENCE
-              </span>
-              <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-violet-500/20 text-violet-300 border border-violet-400/30">
-                MODULES
-              </span>
-            </div>
-
-            <div className="space-y-1">
-              {STRATEGIC_ITEMS.map(item => {
-                const Icon = item.icon;
-                const isActive = activeTab === item.id;
-
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setActiveTab(item.id);
-                      setIsOpen(false);
-                    }}
-                    className={`w-full flex items-center justify-between px-3.5 py-2 rounded-lg text-xs transition-all text-left cursor-pointer ${
-                      isActive
-                        ? 'bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 text-white font-semibold shadow-xs'
-                        : 'text-slate-300 hover:text-white hover:bg-white/[0.05] font-medium'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-purple-300/70'}`} />
-                      <span>{item.label}</span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
         </div>
 
-        {/* Footer */}
+        {/* Footer: Status & Reset Baseline */}
         <div className="p-3 border-t border-[#241e3d]/80 bg-[#090714]/80 text-[11px] text-slate-400 flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse"></span>
-            <span className="font-mono text-[10px] tracking-wider text-purple-300">#EDGEHUB</span>
+            <span className="text-[10px] font-mono tracking-wider text-purple-300 font-semibold">EDGE // RESEARCH</span>
           </div>
           <button
             onClick={() => {
@@ -274,8 +261,8 @@ export function Sidebar({
                 resetToDemoData();
               }
             }}
-            title="Reset dataset"
-            className="p-1 rounded text-slate-400 hover:text-white hover:bg-white/10 cursor-pointer"
+            title="Restore baseline verified research dataset"
+            className="p-1 rounded text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>

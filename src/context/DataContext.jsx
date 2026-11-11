@@ -11,11 +11,15 @@ import { SEED_EVIDENCE } from '../data/seedEvidence';
 import { SEED_FINDINGS } from '../data/seedFindings';
 import { KERALA_DISTRICTS } from '../data/geographicData';
 import { getOrgCategory } from '../data/models';
+import { 
+  PARTNERSHIP_CLASSIFICATION_MAP, 
+  orgMatchesPartnershipCategory 
+} from '../data/partnershipClassificationData.js';
 
 const DataContext = createContext(null);
 
 const STORAGE_KEYS = {
-  ORGANISATIONS: 'edge_hub_organisations_v7',
+  ORGANISATIONS: 'edge_hub_organisations_v9',
   COURSES: 'edge_hub_courses_v4',
   PARTNERSHIPS: 'edge_hub_partnerships_v4',
   SOURCES: 'edge_hub_sources_v4',
@@ -23,14 +27,35 @@ const STORAGE_KEYS = {
   FINDINGS: 'edge_hub_findings_v2',
 };
 
-// Helper: Ensure strict uniqueness of items by id
-function deduplicateById(list = []) {
+// Helper: Ensure strict uniqueness of items by id and enrich with partnership classification
+function enrichWithPartnerships(org) {
+  if (!org || !org.id) return org;
+  const p = PARTNERSHIP_CLASSIFICATION_MAP[org.id];
+  if (!p) return org;
+  return {
+    ...org,
+    entityNature: p.entityNature,
+    entityNatureLabel: p.entityNatureLabel,
+    primaryBusiness: p.primaryBusiness,
+    partnershipTargets: p.partnershipTargets,
+    serviceProvided: p.serviceProvided,
+    programmeType: p.programmeType,
+    deliveryModel: p.deliveryModel || org.deliveryMethod,
+    evidenceSource: p.evidenceSource,
+    confidenceLevel: p.confidenceLevel,
+    partnershipCategories: p.partnershipCategories,
+    isMultiSegment: p.isMultiSegment,
+    partnershipClassification: p
+  };
+}
+
+function deduplicateAndEnrich(list = []) {
   const seen = new Set();
   return list.filter(item => {
     if (!item || !item.id || seen.has(item.id)) return false;
     seen.add(item.id);
     return true;
-  });
+  }).map(enrichWithPartnerships);
 }
 
 const INITIAL_FILTERS = {
@@ -39,7 +64,8 @@ const INITIAL_FILTERS = {
   state: 'All',
   districts: [], // empty = all
   cities: [],
-  category: 'All', // 'All' | 'Schools' | 'Colleges & Universities' | 'Corporate' | 'Other Partnerships'
+  category: 'All', // 'All' | 'Schools' | 'Colleges & Universities' | 'Corporate' | 'Other Partnerships' | 'Multi-Segment'
+  entityNature: 'all', // 'all' | 'external_provider' | 'institution'
   segments: [],
   orgTypes: [],
   technologies: [],
@@ -65,6 +91,7 @@ export function DataProvider({ children }) {
       localStorage.removeItem('edge_hub_organisations_v4');
       localStorage.removeItem('edge_hub_organisations_v5');
       localStorage.removeItem('edge_hub_organisations_v6');
+      localStorage.removeItem('edge_hub_organisations_v7');
       localStorage.removeItem('edge_hub_courses_v2');
       localStorage.removeItem('edge_hub_courses_v3');
       localStorage.removeItem('edge_hub_partnerships_v2');
@@ -74,13 +101,13 @@ export function DataProvider({ children }) {
       const saved = localStorage.getItem(STORAGE_KEYS.ORGANISATIONS);
       if (saved) {
         const parsed = JSON.parse(saved);
-        const uniqueParsed = deduplicateById(parsed);
+        const uniqueParsed = deduplicateAndEnrich(parsed);
         const missing = SEED_ORGANISATIONS.filter(seedOrg => !uniqueParsed.some(o => o.id === seedOrg.id));
-        return deduplicateById([...uniqueParsed, ...missing]);
+        return deduplicateAndEnrich([...uniqueParsed, ...missing]);
       }
-      return deduplicateById(SEED_ORGANISATIONS);
+      return deduplicateAndEnrich(SEED_ORGANISATIONS);
     } catch {
-      return deduplicateById(SEED_ORGANISATIONS);
+      return deduplicateAndEnrich(SEED_ORGANISATIONS);
     }
   });
 
@@ -281,10 +308,17 @@ export function DataProvider({ children }) {
         return false;
       }
 
-      // 2b. Main Category Filter (Schools, Colleges & Universities, Corporate, Other Partnerships)
+      // 2b. Main Partnership Category Filter (Schools, Colleges & Universities, Corporate, Other Partnerships, Multi-Segment)
       if (filters.category && filters.category !== 'All') {
-        const cat = getOrgCategory(org);
-        if (cat !== filters.category) {
+        if (!orgMatchesPartnershipCategory(org, filters.category)) {
+          return false;
+        }
+      }
+
+      // 2c. Entity Nature Filter (All, External Service Providers, Institutions Themselves)
+      if (filters.entityNature && filters.entityNature !== 'all') {
+        const nature = org.entityNature || (org.segment === 'training_institutes' || org.segment === 'agencies_edtech' ? 'external_provider' : 'institution');
+        if (nature !== filters.entityNature) {
           return false;
         }
       }

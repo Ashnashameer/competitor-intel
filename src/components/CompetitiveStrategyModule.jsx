@@ -26,15 +26,18 @@ export function CompetitiveStrategyModule({ onSelectOrg, onNavigateHome }) {
   // Filtered Competitors List
   const filteredList = useMemo(() => {
     return COMPETITIVE_STRATEGY_DATA.filter(item => {
+      const name = item.competitorName || item.orgName || '';
+      const sector = item.primarySector || item.archetype || '';
+      const arch = item.strategicArchetype || item.archetype || '';
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
-        const matchesName = item.competitorName.toLowerCase().includes(q);
-        const matchesSector = item.primarySector.toLowerCase().includes(q);
-        const matchesArch = item.strategicArchetype.toLowerCase().includes(q);
+        const matchesName = name.toLowerCase().includes(q);
+        const matchesSector = sector.toLowerCase().includes(q);
+        const matchesArch = arch.toLowerCase().includes(q);
         if (!matchesName && !matchesSector && !matchesArch) return false;
       }
       if (sectorFilter !== 'All') {
-        if (!item.primarySector.toLowerCase().includes(sectorFilter.toLowerCase())) {
+        if (!sector.toLowerCase().includes(sectorFilter.toLowerCase())) {
           return false;
         }
       }
@@ -345,51 +348,58 @@ export function CompetitiveStrategyModule({ onSelectOrg, onNavigateHome }) {
 
       {/* Clean Battlecard Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        {filteredList.map(item => (
-          <div
-            key={item.competitorId}
-            onClick={() => setSelectedStrategy(item)}
-            className="group bg-white rounded-2xl border border-purple-100 hover:border-purple-300 shadow-2xs hover:shadow-lg transition-all duration-200 p-5 flex flex-col justify-between min-h-[195px] cursor-pointer"
-          >
-            <div>
-              {/* Top: Monogram + Name */}
-              <div className="flex items-center gap-3 mb-3.5">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0c0a1a] via-[#1a1236] to-[#261f42] text-purple-300 font-black text-sm flex items-center justify-center shrink-0 border border-purple-900/40 shadow-xs group-hover:scale-105 transition-transform">
-                  {item.competitorName.substring(0, 2).toUpperCase()}
+        {filteredList.map(item => {
+          const name = item.competitorName || item.orgName || 'Competitor';
+          const sector = item.primarySector || item.archetype || 'Schools & Technology';
+          const presence = (item.marketPresence || item.marketShareEstimate || 'Kerala').split(',')[0];
+          const id = item.competitorId || item.orgId;
+
+          return (
+            <div
+              key={id}
+              onClick={() => setSelectedStrategy(item)}
+              className="group bg-white rounded-2xl border border-purple-100 hover:border-purple-300 shadow-2xs hover:shadow-lg transition-all duration-200 p-5 flex flex-col justify-between min-h-[195px] cursor-pointer"
+            >
+              <div>
+                {/* Top: Monogram + Name */}
+                <div className="flex items-center gap-3 mb-3.5">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0c0a1a] via-[#1a1236] to-[#261f42] text-purple-300 font-black text-sm flex items-center justify-center shrink-0 border border-purple-900/40 shadow-xs group-hover:scale-105 transition-transform">
+                    {name.substring(0, 2).toUpperCase()}
+                  </div>
+                  <h3 className="font-bold text-slate-900 text-base group-hover:text-purple-700 transition-colors line-clamp-1 leading-snug">
+                    {name}
+                  </h3>
                 </div>
-                <h3 className="font-bold text-slate-900 text-base group-hover:text-purple-700 transition-colors line-clamp-1 leading-snug">
-                  {item.competitorName}
-                </h3>
+
+                {/* Exactly Two Key Information Items */}
+                <div className="space-y-1.5 pl-0.5">
+                  <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
+                    <Building2 className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+                    <span className="truncate">{sector}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
+                    <MapPin className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+                    <span className="truncate">{presence}</span>
+                  </div>
+                </div>
               </div>
 
-              {/* Exactly Two Key Information Items */}
-              <div className="space-y-1.5 pl-0.5">
-                <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
-                  <Building2 className="w-3.5 h-3.5 text-purple-600 shrink-0" />
-                  <span className="truncate">{item.primarySector}</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-slate-600 font-medium">
-                  <MapPin className="w-3.5 h-3.5 text-purple-600 shrink-0" />
-                  <span className="truncate">{item.marketPresence.split(',')[0]}</span>
-                </div>
+              {/* Single Prominent View Button */}
+              <div className="pt-4 mt-3 border-t border-purple-50">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedStrategy(item);
+                  }}
+                  className="w-full py-2.5 px-4 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>View Strategic Battlecard</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
               </div>
             </div>
-
-            {/* Single Prominent View Button */}
-            <div className="pt-4 mt-3 border-t border-purple-50">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedStrategy(item);
-                }}
-                className="w-full py-2.5 px-4 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span>View Strategy</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
     </div>

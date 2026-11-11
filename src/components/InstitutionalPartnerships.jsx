@@ -83,7 +83,7 @@ export function InstitutionalPartnerships() {
 
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-violet-700 hover:to-purple-700 rounded-lg shadow-sm shadow-purple-600/30 transition-all shrink-0"
+            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-gradient-to-r from-violet-600 via-purple-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 rounded-lg shadow-sm shadow-purple-600/30 transition-all shrink-0"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Partnership Record</span>

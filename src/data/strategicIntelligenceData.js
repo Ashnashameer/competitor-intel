@@ -1612,6 +1612,12 @@ export const COMPETITIVE_STRATEGY_DATA = [
     ]
   },
   {
+    competitorId: "org-youngminds-01",
+    competitorName: "YoungMinds.app (YM Innovations)",
+    primarySector: "Schools & Student Entrepreneurship",
+    strategicArchetype: "Student Innovation, Entrepreneurship & STEM Labs",
+    marketPresence: "HiLITE Business Park, Kozhikode & Kerala-wide",
+    positioningSummary: "Blends K-12 STEM tinkering with startup venture creation, Design Thinking, and the YoungPreneurs Fest.",
     orgId: "org-youngminds-01",
     orgName: "YoungMinds.app (YM Innovations)",
     archetype: "Student Innovation, Entrepreneurship & STEM Labs",
@@ -1716,6 +1722,12 @@ export const COMPETITIVE_STRATEGY_DATA = [
     ]
   },
   {
+    competitorId: "org-ulspaceclub-01",
+    competitorName: "UL Space Club",
+    primarySector: "Schools & Astronomy STEM",
+    strategicArchetype: "Space Science, Astronomy & ISRO Space Tutor",
+    marketPresence: "Kozhikode & Malabar Schools",
+    positioningSummary: "Esteemed non-profit space science and astronomy organisation backed by ULCCS Foundation and registered as an ISRO Space Tutor.",
     orgId: "org-ulspaceclub-01",
     orgName: "UL Space Club",
     archetype: "Space Science, Astronomy & ISRO Space Tutor",

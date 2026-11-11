@@ -2,13 +2,16 @@ import React from 'react';
 import { 
   SlidersHorizontal, 
   Plus, 
-  Download, 
-  MapPin, 
-  Sparkles
+  Download 
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import edgeCircleLogo from '../assets/edge_logo_circle.png';
 
+/**
+ * Header:
+ * Clean, human product header for EDGE Competitor Intel.
+ * Provides a self-explanatory title and concise subtitle for every view.
+ */
 export function Header({ 
   activeTab, 
   setActiveTab,
@@ -22,111 +25,180 @@ export function Header({
     exportToCSV
   } = useData();
 
-  const getPageTitle = () => {
+  const getPageMeta = () => {
     switch (activeTab) {
       case 'categories':
-        return 'Competitor Categories';
+        return {
+          title: 'Competitor Directory',
+          subtitle: 'Institutional Category Selection'
+        };
       case 'category-detail':
-        if (selectedCategory === 'schools') return 'Schools Competitor Intelligence';
-        if (selectedCategory === 'colleges') return 'Colleges Competitor Intelligence';
-        if (selectedCategory === 'corporate') return 'Corporate Competitor Intelligence';
-        if (selectedCategory === 'other_partnerships') return 'Other Partnerships Intelligence';
-        return 'Category Competitor Intelligence';
       case 'schools':
-        return 'Schools Competitor Intelligence';
+        if (selectedCategory === 'schools' || activeTab === 'schools') {
+          return {
+            title: 'School Partner Directory',
+            subtitle: 'External providers, AI & coding curricula, robotics labs, and student programmes.'
+          };
+        }
+        if (selectedCategory === 'colleges' || activeTab === 'colleges') {
+          return {
+            title: 'College Competitors',
+            subtitle: 'Engineering, arts & science colleges, and campus technical training providers.'
+          };
+        }
+        if (selectedCategory === 'corporate' || activeTab === 'corporate') {
+          return {
+            title: 'Corporate Training Competitors',
+            subtitle: 'Professional bootcamps, IT academies, and corporate upskilling firms.'
+          };
+        }
+        if (selectedCategory === 'other_partnerships' || activeTab === 'other_partnerships') {
+          return {
+            title: 'Partner & Ecosystem Network',
+            subtitle: 'Incubators, government skill programs, and institutional partners.'
+          };
+        }
+        return {
+          title: 'Category Competitors',
+          subtitle: 'Targeted competitive intelligence for selected market vertical.'
+        };
       case 'colleges':
-        return 'Colleges Competitor Intelligence';
+        return {
+          title: 'College Competitors',
+          subtitle: 'Engineering, arts & science colleges, and campus technical training providers.'
+        };
       case 'corporate':
-        return 'Corporate Competitor Intelligence';
+        return {
+          title: 'Corporate Training Competitors',
+          subtitle: 'Professional bootcamps, IT academies, and corporate upskilling firms.'
+        };
       case 'other_partnerships':
-        return 'Other Partnerships Intelligence';
+        return {
+          title: 'Partner & Ecosystem Network',
+          subtitle: 'Incubators, government skill programs, and institutional partners.'
+        };
       case 'overview':
-        return 'Market Analysis Overview';
+        return {
+          title: 'Market Overview',
+          subtitle: 'Summary statistics, verified research coverage, and recently audited competitors.'
+        };
       case 'organisations':
-        return 'Competitor Intelligence Directory';
+      case 'directory':
+        return {
+          title: 'Find Competitors',
+          subtitle: 'Search and benchmark 51 verified technology education providers across Kerala.'
+        };
       case 'organisation-detail':
-        return 'Competitor Intelligence Profile';
+        return {
+          title: 'Competitor Profile',
+          subtitle: 'Detailed institutional dossier, programs, fees, and verified evidence.'
+        };
       case 'compare':
       case 'comparison':
-        return 'Compare Competitors';
+        return {
+          title: 'Compare Competitors',
+          subtitle: 'Side-by-side benchmark across programs, pricing, technologies, and positioning.'
+        };
+      case 'courses':
+        return {
+          title: 'Courses & Pricing Database',
+          subtitle: 'Verified tech training courses, fees, and program durations.'
+        };
       case 'sources':
-        return 'Research Sources & Evidence';
+        return {
+          title: 'Research Sources & Evidence',
+          subtitle: 'Verifiable citations, official brochures, gazettes, and documentation links.'
+        };
       case 'strategy':
-        return 'Competitive Strategy & Market Positioning';
+        return {
+          title: 'Strategy Battlecards',
+          subtitle: 'Direct differentiation analysis, competitor strengths, and competitive advantages.'
+        };
       case 'trends':
-        return 'Market & Industry Trends';
+        return {
+          title: 'Market Trends & Policy Directives',
+          subtitle: 'NEP 2020 guidelines, CBSE circulars, and emerging technology adoption.'
+        };
       case 'activities':
-        return 'Competitor Activity Tracker';
+        return {
+          title: 'Competitor Activity Tracker',
+          subtitle: 'Recent competitor announcements, school MoUs, and strategic movements.'
+        };
       default:
-        return 'Competitor Intelligence Hub';
+        return {
+          title: 'Competitor Intelligence Hub',
+          subtitle: 'Market research and competitive intelligence platform.'
+        };
     }
   };
 
+  const meta = getPageMeta();
+
   return (
-    <header className="sticky top-0 z-30 bg-white border-b border-purple-100 shadow-xs">
-      <div className="px-5 lg:px-8 py-3.5 flex items-center justify-between gap-4">
-        {/* Left: Section Title with Brand Overline & Official Logo Badge */}
-        <div className="flex items-center gap-3">
+    <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-purple-100 shadow-2xs">
+      <div className="px-3.5 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3 sm:gap-4">
+        {/* Left: Section Title & Human Subtitle */}
+        <div className="flex items-center gap-3 min-w-0">
           <button
             onClick={() => setActiveTab && setActiveTab('welcome')}
-            className="hidden sm:block w-9 h-9 rounded-full overflow-hidden shadow-xs ring-1 ring-purple-200/80 hover:ring-purple-500 shrink-0 cursor-pointer transition-all group"
-            title="Return to Welcome Screen"
+            className="hidden sm:block w-8 h-8 rounded-full overflow-hidden ring-1 ring-purple-200 hover:ring-purple-500 shrink-0 cursor-pointer transition-all shadow-xs"
+            title="Return to Landing Page"
           >
             <img 
               src={edgeCircleLogo} 
-              alt="EDGE Logo" 
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform" 
+              alt="EDGE" 
+              className="w-full h-full object-cover" 
             />
           </button>
-          <div>
-            <div className="flex items-center gap-2 mb-0.5">
-              <span className="font-mono text-[9px] tracking-[0.22em] uppercase font-bold text-slate-500">
-                A MYST INITIATIVE
-              </span>
-            </div>
-            <h2 className="text-lg font-bold text-slate-900 tracking-tight">
-              {getPageTitle()}
-            </h2>
+          <div className="min-w-0">
+            <h1 className="text-sm xs:text-base sm:text-lg font-bold text-slate-900 tracking-tight truncate leading-tight">
+              {meta.title}
+            </h1>
+            <p className="text-[11px] sm:text-xs text-slate-500 truncate mt-0.5 hidden xs:block">
+              {meta.subtitle}
+            </p>
           </div>
         </div>
 
-        {/* Right Actions */}
-        <div className="flex items-center gap-2.5">
-          {/* Filters Toggle Button */}
-          <button
-            onClick={() => setIsSlicerOpen(!isSlicerOpen)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
-              activeFilterCount > 0
-                ? 'bg-purple-50 text-purple-700 border-purple-200'
-                : 'bg-white text-slate-700 border-slate-200 hover:bg-purple-50/50 hover:border-purple-200'
-            }`}
-          >
-            <SlidersHorizontal className="w-3.5 h-3.5 text-purple-600" />
-            <span>Filters</span>
-            {activeFilterCount > 0 && (
-              <span className="w-4 h-4 rounded-full bg-gradient-to-r from-violet-600 to-purple-600 text-white text-[10px] flex items-center justify-center font-bold">
-                {activeFilterCount}
-              </span>
-            )}
-          </button>
+        {/* Right Actions: Restrained, Standard Web Controls (Matching Purple Theme) */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          {/* Filters Toggle Button (Hidden on pure category selection page) */}
+          {activeTab !== 'categories' && (
+            <button
+              onClick={() => setIsSlicerOpen(!isSlicerOpen)}
+              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors cursor-pointer ${
+                activeFilterCount > 0
+                  ? 'bg-purple-50 text-purple-700 border-purple-200 font-semibold'
+                  : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+              }`}
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5 text-purple-600" />
+              <span className="hidden xs:inline">Filters</span>
+              {activeFilterCount > 0 && (
+                <span className="w-4 h-4 rounded-full bg-purple-600 text-white text-[10px] flex items-center justify-center font-bold">
+                  {activeFilterCount}
+                </span>
+              )}
+            </button>
+          )}
 
           {/* Export CSV Button */}
           <button
             onClick={exportToCSV}
-            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-purple-50/50 hover:border-purple-200 transition-colors"
-            title="Export organisations to CSV"
+            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-colors cursor-pointer"
+            title="Export competitor records to CSV spreadsheet"
           >
             <Download className="w-3.5 h-3.5 text-slate-500" />
             <span>Export CSV</span>
           </button>
 
-          {/* Primary Action: Add Organisation */}
+          {/* Primary Action: Add Competitor */}
           <button
             onClick={onOpenAddModal}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-700 hover:from-violet-700 hover:via-purple-700 hover:to-indigo-800 shadow-xs transition-all shrink-0"
+            className="flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-purple-600 hover:bg-purple-700 shadow-xs transition-colors shrink-0 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Add Organisation</span>
+            <span>Add<span className="hidden sm:inline"> Competitor</span></span>
           </button>
         </div>
       </div>

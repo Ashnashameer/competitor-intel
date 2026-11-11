@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        'xs': '380px',
+      },
       colors: {
         edge: {
           electric: '#7c3aed',
@@ -35,7 +38,9 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['Outfit', '"Plus Jakarta Sans"', 'Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        display: ['Outfit', '"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+        outfit: ['Outfit', '"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
         editorial: ['"New York"', '-apple-system-ui-serif', '"Bodoni Moda"', '"Playfair Display"', '"Cormorant Garamond"', 'Didot', 'serif']
       }
