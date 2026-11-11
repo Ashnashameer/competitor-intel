@@ -47,8 +47,7 @@ export function WelcomePage({ onExplore }) {
           alt="EDGE Competitor Intel 4K Atmospheric Environment" 
           loading="eager"
           decoding="async"
-          className="absolute inset-0 w-full h-full object-cover object-[72%_center] lg:object-center select-none"
-          style={{ imageRendering: '-webkit-optimize-contrast' }}
+          className="absolute inset-0 w-full h-full object-cover object-[72%_center] lg:object-center select-none pointer-events-none"
         />
 
         {/* Unified Cinematic Atmosphere - One cohesive, continuous environment across the full canvas */}
