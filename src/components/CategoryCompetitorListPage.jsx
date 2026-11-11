@@ -324,6 +324,15 @@ export function CategoryCompetitorListPage({
 
       return true;
     }).sort((a, b) => {
+      // In School Partner Directory: Verified cards first, unverified cards last
+      if (categoryId === 'schools') {
+        const aVerified = isSchoolPartnerVerified(a) ? 1 : 0;
+        const bVerified = isSchoolPartnerVerified(b) ? 1 : 0;
+        if (aVerified !== bVerified) {
+          return bVerified - aVerified; // 1 (verified) before 0 (unverified)
+        }
+      }
+
       // Handle Column Sorting
       let valA = a[sortField] || '';
       let valB = b[sortField] || '';
