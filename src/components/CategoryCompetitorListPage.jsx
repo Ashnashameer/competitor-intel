@@ -28,7 +28,8 @@ import {
   PARTNER_ECOSYSTEM,
   SCHOOL_SKILL_CATEGORIES,
   getCompetitorSkillCategories,
-  getCategoryPartnershipMetrics
+  getCategoryPartnershipMetrics,
+  isSchoolPartnerVerified
 } from '../data/categoryRelationships';
 import { useData } from '../context/DataContext';
 
@@ -235,7 +236,11 @@ export function CategoryCompetitorListPage({
         }
         if (schoolDistrict !== 'All' && org.district !== schoolDistrict) return false;
         if (schoolLocation !== 'All' && org.city !== schoolLocation) return false;
-        if (schoolVerification !== 'All' && org.verificationStatus !== schoolVerification) return false;
+        if (schoolVerification !== 'All') {
+          const verified = isSchoolPartnerVerified(org);
+          if (schoolVerification === 'verified' && !verified) return false;
+          if (schoolVerification === 'not_verified' && verified) return false;
+        }
         if (schoolDeliveryMode !== 'All') {
           const mode = org.deliveryMethod || org.deliveryMode || '';
           if (!mode.toLowerCase().includes(schoolDeliveryMode.toLowerCase())) return false;
@@ -386,6 +391,9 @@ export function CategoryCompetitorListPage({
 
   // Helper for partner organisations column in table
   const getPartnerOrgsSnippet = (org) => {
+    if (org.id === 'org-aibonic-01' || org.id === 'org-youngminds-01') {
+      return 'Not publicly established';
+    }
     if (org.id === 'org-delead-01') {
       return 'Walkaroo Foundation, DIETs, NITC TBI, Nlightened ZenSolutions';
     }
@@ -395,32 +403,21 @@ export function CategoryCompetitorListPage({
     if (org.id === 'org-ulspaceclub-01') {
       return "GHSS Karapparamba, General Education Dept, DIET Kozhikode";
     }
-    if (org.id === 'org-robuverse-01' || org.id === 'org-stemxpert-01' || org.id === 'org-youngminds-01') {
-      return 'School partnerships: Specific school names not publicly disclosed';
+    if (org.id === 'org-agn-05') {
+      return "Silver Hills Public School, Devagiri CMI Public School";
     }
-    if (org.id === 'org-evolve-01' || org.id === 'org-isq-01' || org.id === 'org-naturenurture-01') {
-      return 'School partnerships: Not independently verified';
+    if (org.id === 'org-pappiyon-01') {
+      return "SVN HSS Samiti, Pre-Primary Academic Networks";
     }
-    const connected = PARTNER_ECOSYSTEM.filter(p => p.connectedOrganisations.includes(org.name));
-    if (connected.length > 0) return connected.map(c => c.name).join(', ');
-    if (org.institutionalPartnerships && org.institutionalPartnerships.length > 0) {
-      return `${org.institutionalPartnerships.length} Institutional MoUs`;
-    }
-    return 'None reported';
+    const metrics = getCategoryPartnershipMetrics(org, categoryId);
+    if (metrics.partnershipType) return metrics.partnershipType;
+    return 'Documented Provider';
   };
 
   // Helper for school partnerships count/text
   const getSchoolPartnershipsSnippet = (org) => {
-    if (org.id === 'org-delead-01') return '44 Government & Aided High Schools (Walk2Lead)';
-    if (org.id === 'org-qfactory-01') return "2 Documented Schools (Sree Gokulam, Bhavan's Chevayur)";
-    if (org.id === 'org-ulspaceclub-01') return "Documented School Outreach & Space Club @ Campus";
-    if (org.id === 'org-robuverse-01' || org.id === 'org-stemxpert-01' || org.id === 'org-youngminds-01') return 'School partnerships: Specific school names not publicly disclosed';
-    if (org.id === 'org-evolve-01' || org.id === 'org-isq-01' || org.id === 'org-naturenurture-01') return 'School partnerships: Not independently verified';
-    if (Array.isArray(org.institutionalPartnerships)) {
-      const schools = org.institutionalPartnerships.filter(p => typeof p === 'string' && (p.includes('School') || p.includes('GHSS') || p.includes('GHS') || p.includes('GUPS')));
-      if (schools.length > 0) return `${schools.length} Schools`;
-    }
-    return 'Direct Campus Operations';
+    const metrics = getCategoryPartnershipMetrics(org, 'schools');
+    return metrics.verifiedCount || 'Not publicly verified';
   };
 
   return (
@@ -453,16 +450,35 @@ export function CategoryCompetitorListPage({
       {/* ========================================================================= */}
       {/* 2. MINIMAL HEADING & VIEW SWITCHER                                        */}
       {/* ========================================================================= */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
             {getPageHeading()}
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
             {categoryId === 'schools' 
-              ? `${filteredOrganisations.length} verified external school partners & curriculum providers in Kerala`
+              ? `${filteredOrganisations.length} external school partners & curriculum providers in Kerala`
               : `${filteredOrganisations.length} verified ${filteredOrganisations.length === 1 ? 'competitor' : 'competitors'} in this category`}
           </p>
+
+          {/* Minimal Verification Status Legend */}
+          {categoryId === 'schools' && (
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 mt-2.5 pt-1 text-[11px] text-slate-600">
+              <div className="flex items-center gap-1.5">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[9.5px] font-bold tracking-wider uppercase bg-purple-100/90 text-purple-900 border border-purple-200 shadow-2xs">
+                  <CheckCircle2 className="w-2.5 h-2.5 text-purple-700" />
+                  VERIFIED
+                </span>
+                <span className="text-slate-500 font-medium">— Public partnership evidence available</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-[9.5px] font-semibold tracking-wider uppercase bg-white text-slate-600 border border-slate-300 shadow-2xs">
+                  NOT PUBLICLY VERIFIED
+                </span>
+                <span className="text-slate-500 font-medium">— School-facing provider, but partnership evidence not publicly established</span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* View Switcher: Card View vs Table View */}
@@ -758,9 +774,8 @@ export function CategoryCompetitorListPage({
                   className="appearance-none pl-3 pr-7 py-1.5 text-xs bg-slate-50 border border-slate-250 rounded-lg text-slate-700 font-semibold focus:outline-none focus:ring-1 focus:ring-purple-600 cursor-pointer"
                 >
                   <option value="All">Verification: All</option>
-                  <option value="verified">Verified</option>
-                  <option value="partially_verified">Partially Verified</option>
-                  <option value="official_source">Official Source</option>
+                  <option value="verified">Verified (14)</option>
+                  <option value="not_verified">Not Publicly Verified (2)</option>
                 </select>
                 <ChevronDown className="w-3 h-3 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
@@ -1060,30 +1075,65 @@ export function CategoryCompetitorListPage({
             })();
 
             const metrics = getCategoryPartnershipMetrics(org, categoryId);
+            const isSchools = categoryId === 'schools';
+            const isVerified = isSchools ? isSchoolPartnerVerified(org) : metrics.isVerified;
+
+            // Verification-specific container styling:
+            // Verified: Soft light lavender (#f8f5fc) with subtle purple border
+            // Not Publicly Verified: Clean white card with neutral light-gray border
+            const cardStyleClass = isSchools
+              ? isVerified
+                ? 'bg-[#f8f5fc] border-purple-200/90 hover:border-purple-400 hover:shadow-lg hover:shadow-purple-950/5'
+                : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-md'
+              : 'bg-white border-slate-200 hover:border-purple-300 hover:shadow-lg';
 
             return (
               <div
                 key={org.id}
                 onClick={() => onSelectOrg(org)}
-                className="group bg-white rounded-xl border border-slate-200 hover:border-purple-300 hover:shadow-lg transition-all duration-200 p-4 sm:p-5 flex flex-col justify-between min-h-[220px] cursor-pointer"
+                className={`group rounded-xl border transition-all duration-200 p-4 sm:p-5 flex flex-col justify-between min-h-[220px] cursor-pointer ${cardStyleClass}`}
               >
                 <div>
-                  {/* Top: Logo / Monogram + Prominent Competitor Name */}
+                  {/* Top Bar: Verification Status Badge + Multi-Sector Tag */}
+                  <div className="flex items-center justify-between gap-2 mb-2.5 min-h-[22px]">
+                    {isSchools ? (
+                      isVerified ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase bg-purple-100 text-purple-900 border border-purple-200/90 shadow-2xs">
+                          <CheckCircle2 className="w-2.5 h-2.5 text-purple-700 shrink-0" />
+                          <span>VERIFIED</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[8.5px] font-semibold tracking-wider uppercase bg-slate-100 text-slate-600 border border-slate-250">
+                          NOT PUBLICLY VERIFIED
+                        </span>
+                      )
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[9.5px] font-semibold border bg-purple-50 text-purple-800 border-purple-200">
+                        <span className="w-1.5 h-1.5 rounded-full bg-purple-600" />
+                        <span>{org.entityNatureLabel || 'External Service / Training Provider'}</span>
+                      </span>
+                    )}
+
+                    {org.isMultiSegment && (
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-semibold bg-purple-50 text-purple-700 border border-purple-200 ml-auto">
+                        Multi-Sector
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Logo / Monogram + Full Competitor Name */}
                   <div className="flex items-start gap-3 mb-2.5">
-                    <div className="w-10 h-10 rounded-xl bg-slate-900 text-purple-300 font-bold text-xs flex items-center justify-center shrink-0 shadow-xs border border-purple-900/30 group-hover:bg-purple-700 group-hover:text-white transition-colors">
+                    <div className={`w-10 h-10 rounded-xl font-bold text-xs flex items-center justify-center shrink-0 shadow-xs border transition-colors ${
+                      isSchools && isVerified
+                        ? 'bg-purple-900 text-purple-200 border-purple-800/40 group-hover:bg-purple-700 group-hover:text-white'
+                        : 'bg-slate-900 text-purple-300 border-purple-900/30 group-hover:bg-purple-700 group-hover:text-white'
+                    }`}>
                       {org.logoText || org.name.substring(0, 2).toUpperCase()}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <h3 className="font-bold text-slate-900 text-sm group-hover:text-purple-700 transition-colors line-clamp-1 leading-snug">
-                          {org.name}
-                        </h3>
-                        {org.isMultiSegment && (
-                          <span className="px-1.5 py-0.2 rounded text-[9.5px] font-mono font-semibold bg-purple-50 text-purple-700 border border-purple-200">
-                            Multi-Sector
-                          </span>
-                        )}
-                      </div>
+                      <h3 className="font-bold text-slate-900 text-sm group-hover:text-purple-700 transition-colors leading-snug">
+                        {org.name}
+                      </h3>
                       <p className="text-[11px] text-slate-500 truncate flex items-center gap-1 mt-0.5">
                         <MapPin className="w-3 h-3 text-purple-500 shrink-0" />
                         <span>{cleanLocation}</span>
@@ -1094,15 +1144,17 @@ export function CategoryCompetitorListPage({
                   {/* Organisation Type & Partnership Type Badges */}
                   <div className="space-y-2 pl-0.5 mt-2">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold border bg-purple-50 text-purple-800 border-purple-200">
-                        <span className="w-1.5 h-1.5 rounded-full bg-purple-600" />
-                        <span>{org.entityNatureLabel || 'External Service / Training Provider'}</span>
-                      </span>
+                      {isSchools ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold border bg-purple-100/70 text-purple-900 border-purple-200">
+                          <span className="w-1.5 h-1.5 rounded-full bg-purple-600" />
+                          <span>{org.entityNatureLabel || 'External Service / Training Provider'}</span>
+                        </span>
+                      ) : null}
 
                       {metrics.partnershipType && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium border bg-slate-50 text-slate-700 border-slate-200">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium border bg-white/80 text-slate-700 border-slate-200">
                           <Handshake className="w-3 h-3 text-purple-600" />
-                          <span className="truncate max-w-[180px]">{metrics.partnershipType}</span>
+                          <span className="truncate max-w-[200px]">{metrics.partnershipType}</span>
                         </span>
                       )}
                     </div>
@@ -1115,12 +1167,22 @@ export function CategoryCompetitorListPage({
                     )}
 
                     {/* Verified Partnerships Metric Pill */}
-                    <div className="flex items-center justify-between py-1.5 px-2.5 rounded-lg bg-slate-50 border border-slate-200/80 text-[11px] mt-2">
-                      <span className="font-semibold text-slate-500">
+                    <div className={`flex items-center justify-between py-1.5 px-2.5 rounded-lg border text-[11px] mt-2 ${
+                      isSchools && isVerified 
+                        ? 'bg-white/85 border-purple-200/80' 
+                        : 'bg-slate-50 border-slate-200/80'
+                    }`}>
+                      <span className="font-semibold text-slate-600">
                         {categoryId === 'schools' ? 'School Partnerships:' : categoryId === 'colleges' ? 'College Partnerships:' : categoryId === 'corporate' ? 'Corporate Clients:' : 'Institutional Partnerships:'}
                       </span>
-                      <span className={`font-mono font-bold text-xs ${metrics.isVerified ? 'text-purple-700' : 'text-slate-500 italic'}`}>
-                        {metrics.verifiedCount}
+                      <span className={`font-mono text-xs ${
+                        isSchools
+                          ? isVerified ? 'text-purple-900 font-bold' : 'text-slate-600 font-sans font-medium'
+                          : metrics.isVerified ? 'text-purple-700 font-bold' : 'text-slate-500 italic'
+                      }`}>
+                        {isSchools 
+                          ? (isVerified ? metrics.verifiedCount : 'Not publicly verified') 
+                          : metrics.verifiedCount}
                       </span>
                     </div>
 
@@ -1145,10 +1207,23 @@ export function CategoryCompetitorListPage({
 
                     {/* Confidence / Verification Indicator */}
                     <div className="flex items-center justify-between text-[11px] pt-1">
-                      <span className="inline-flex items-center gap-1 font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full text-[10px]">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                        <span>{metrics.confidence}</span>
-                      </span>
+                      {isSchools ? (
+                        isVerified ? (
+                          <span className="inline-flex items-center gap-1 font-semibold text-purple-900 bg-purple-100/70 border border-purple-200 px-2 py-0.5 rounded-full text-[10px]">
+                            <CheckCircle2 className="w-3 h-3 text-purple-700" />
+                            <span>Public Evidence Available</span>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 font-medium text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full text-[10px]">
+                            <span>Evidence Not Publicly Established</span>
+                          </span>
+                        )
+                      ) : (
+                        <span className="inline-flex items-center gap-1 font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full text-[10px]">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          <span>{metrics.confidence}</span>
+                        </span>
+                      )}
 
                       {metrics.evidenceUrl && (
                         <span className="text-[10px] font-mono text-purple-600 truncate max-w-[140px]">
@@ -1160,13 +1235,17 @@ export function CategoryCompetitorListPage({
                 </div>
 
                 {/* Prominent View Profile Button */}
-                <div className="pt-3 mt-3 border-t border-slate-150">
+                <div className="pt-3 mt-3 border-t border-slate-200/70">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       onSelectOrg(org);
                     }}
-                    className="w-full py-2 px-3 rounded-lg bg-purple-50 hover:bg-purple-600 text-purple-700 hover:text-white font-bold text-xs border border-purple-200 hover:border-purple-600 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs group-hover:bg-purple-600 group-hover:text-white"
+                    className={`w-full py-2 px-3 rounded-lg font-bold text-xs border transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs ${
+                      isSchools && isVerified
+                        ? 'bg-purple-100/80 hover:bg-purple-600 text-purple-900 hover:text-white border-purple-200 hover:border-purple-600 group-hover:bg-purple-600 group-hover:text-white'
+                        : 'bg-slate-100 hover:bg-purple-600 text-slate-700 hover:text-white border-slate-200 hover:border-purple-600 group-hover:bg-purple-600 group-hover:text-white'
+                    }`}
                   >
                     <span>View Profile</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -1293,13 +1372,17 @@ export function CategoryCompetitorListPage({
                 {filteredOrganisations.map((org, rowIndex) => {
                   const isDeLead = org.id === 'org-delead-01';
                   const programmes = org.relevantProgrammes || [];
+                  const isSchools = categoryId === 'schools';
+                  const isVerifiedSchool = isSchools && isSchoolPartnerVerified(org);
 
                   return (
                     <tr
                       key={org.id}
                       onClick={() => onSelectOrg(org)}
-                      className={`hover:bg-slate-50 transition-colors cursor-pointer group ${
-                        isDeLead ? 'bg-purple-50/20' : rowIndex % 2 === 1 ? 'bg-slate-50/40' : 'bg-white'
+                      className={`hover:bg-purple-50/30 transition-colors cursor-pointer group ${
+                        isSchools
+                          ? isVerifiedSchool ? 'bg-[#faf7fd]' : 'bg-white'
+                          : isDeLead ? 'bg-purple-50/20' : rowIndex % 2 === 1 ? 'bg-slate-50/40' : 'bg-white'
                       }`}
                     >
                       {/* 1. Name & Monogram (Sticky Left Column) */}
@@ -1446,10 +1529,23 @@ export function CategoryCompetitorListPage({
 
                       {/* Status */}
                       <td className="py-3 px-3 text-center whitespace-nowrap">
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                          <span>{org.verificationStatus === 'verified' ? 'Verified' : 'Official'}</span>
-                        </span>
+                        {isSchools ? (
+                          isVerifiedSchool ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase bg-purple-100 text-purple-900 border border-purple-200">
+                              <CheckCircle2 className="w-2.5 h-2.5 text-purple-700" />
+                              <span>VERIFIED</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[8.5px] font-semibold tracking-wider uppercase bg-slate-100 text-slate-600 border border-slate-250">
+                              NOT PUBLICLY VERIFIED
+                            </span>
+                          )
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                            <span>{org.verificationStatus === 'verified' ? 'Verified' : 'Official'}</span>
+                          </span>
+                        )}
                       </td>
 
                       {/* Action */}

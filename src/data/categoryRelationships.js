@@ -2645,6 +2645,21 @@ import { PROGRAMME_SCHOOL_PARTNERSHIPS } from './schoolResearchData.js';
 import { SEED_PARTNERSHIPS } from './seedData.js';
 
 /**
+ * isSchoolPartnerVerified:
+ * Identifies whether an organisation in the Schools directory has publicly established partnership evidence.
+ * 14 verified competitors -> true
+ * 2 unverified competitors (AiBonic Innovations & YM Innovations) -> false
+ */
+export function isSchoolPartnerVerified(org) {
+  if (!org) return false;
+  const id = org.id || '';
+  const name = (org.name || '').toLowerCase();
+  if (id === 'org-aibonic-01' || name.includes('aibonic')) return false;
+  if (id === 'org-youngminds-01' || name.includes('youngminds') || name.includes('ym innovations')) return false;
+  return true;
+}
+
+/**
  * getCategoryPartnershipMetrics:
  * Evidence-driven partnership summary metrics for an organisation in a given category.
  * Never invents numbers: displays verified counts where evidence exists, or explicitly 'Not publicly verified'.
@@ -2832,6 +2847,31 @@ export function getCategoryPartnershipMetrics(org, categoryId = 'schools') {
         status: 'Active / Ongoing',
         confidence: 'High • Verified Source',
         evidenceUrl: 'https://stemxsolutions.in/'
+      };
+    }
+
+    if (orgId === 'org-aibonic-01' || orgName.includes('aibonic')) {
+      return {
+        verifiedCount: 'Not publicly verified',
+        isVerified: false,
+        partnershipType: 'Turnkey School AI & Robotics Labs, School ERP, and Campus Management',
+        districts: ['Ernakulam', 'Kerala'],
+        programmes: ['Turnkey School AI Labs', 'School ERP', 'Robotics Learning Kits'],
+        status: 'Active Provider',
+        confidence: 'Not Publicly Verified',
+        evidenceUrl: 'https://aibonic.com/'
+      };
+    }
+    if (orgId === 'org-youngminds-01' || orgName.includes('youngminds') || orgName.includes('ym innovations')) {
+      return {
+        verifiedCount: 'Not publicly verified',
+        isVerified: false,
+        partnershipType: 'B2C Learning App & B2B School Innovation Challenges',
+        districts: ['Kozhikode', 'Kerala'],
+        programmes: ['YoungMinds App', 'IoT & Robotics Kits', 'Student Innovation Challenges'],
+        status: 'Active Provider',
+        confidence: 'Not Publicly Verified',
+        evidenceUrl: 'https://youngminds.app/'
       };
     }
 
