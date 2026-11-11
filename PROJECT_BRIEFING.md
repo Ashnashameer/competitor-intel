@@ -174,3 +174,4 @@ Dedicated analytical module for market benchmark **Cyber Square**:
 - **Local Development**: `npm run dev` (Boots Vite dev server at `http://localhost:5173`)
 - **Production Build**: `npm run build` (Generates production artifacts in `dist/`)
 - **Deployment**: Automated via GitHub Actions (`.github/workflows/deploy.yml`) to GitHub Pages.
+
