@@ -2683,7 +2683,7 @@ export function getCategoryPartnershipMetrics(org, categoryId = 'schools') {
   if (categoryId === 'schools') {
     if (orgId === 'org-delead-01' || orgName.includes('de\' lead') || orgName.includes('delead')) {
       return {
-        verifiedCount: '44 Verified Schools (23 Documented)',
+        verifiedCount: '44 Verified Schools',
         isVerified: true,
         partnershipType: 'CSR In-School Robotics Labs & Experiential Camps',
         districts: ['Kozhikode', 'Malappuram', 'Kannur', 'Wayanad'],
@@ -2743,7 +2743,7 @@ export function getCategoryPartnershipMetrics(org, categoryId = 'schools') {
     }
     if (orgId === 'org-pappiyon-01' || orgName.includes('pappiyon')) {
       return {
-        verifiedCount: '60+ Institutions (SVN HSS Documented)',
+        verifiedCount: '60+ Institutions',
         isVerified: true,
         partnershipType: 'Institutional School Mentoring & Academic Excellence MoU',
         districts: ['Malappuram', 'Kozhikode'],
@@ -2815,7 +2815,7 @@ export function getCategoryPartnershipMetrics(org, categoryId = 'schools') {
     }
     if (orgId === 'org-qfactory-01' || orgName.includes('q factory')) {
       return {
-        verifiedCount: '2 Documented Schools (Sree Gokulam, Bhavan\'s)',
+        verifiedCount: '2 Documented Schools',
         isVerified: true,
         partnershipType: 'School Quiz Club Training & Student Mentorship',
         districts: ['Kozhikode'],
@@ -2827,7 +2827,7 @@ export function getCategoryPartnershipMetrics(org, categoryId = 'schools') {
     }
     if (orgId === 'org-ulspaceclub-01' || orgName.includes('space club')) {
       return {
-        verifiedCount: 'Documented Schools (GHSS Karapparamba & Chapters)',
+        verifiedCount: 'Documented Schools',
         isVerified: true,
         partnershipType: 'School Astronomy Outreach & Space Tutor Mandate',
         districts: ['Kozhikode'],
@@ -2839,7 +2839,7 @@ export function getCategoryPartnershipMetrics(org, categoryId = 'schools') {
     }
     if (orgId === 'org-agn-05' || orgName.includes('stemx')) {
       return {
-        verifiedCount: '14+ Partner Schools (Silver Hills, Devagiri Documented)',
+        verifiedCount: '14+ Partner Schools',
         isVerified: true,
         partnershipType: 'Turnkey STEM & Robotics Lab Implementation',
         districts: ['Kozhikode', 'Malappuram', 'Kannur'],
