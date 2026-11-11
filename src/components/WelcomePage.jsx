@@ -41,41 +41,29 @@ export function WelcomePage({ onExplore }) {
           1. DEEP COBALT & VOLUMETRIC VIOLET CANVAS (MASTER 4K ENVIRONMENT)
           ========================================================================= */}
       <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
-        {/* Master 4K Ultra-HD Artwork Layer */}
-        <picture className="absolute inset-0 block w-full h-full">
-          <source srcSet={heroUnifiedWebp} type="image/webp" />
-          <img 
-            src={heroUnifiedPng} 
-            alt="EDGE Competitor Intel 4K Atmospheric Environment" 
-            loading="eager"
-            decoding="async"
-            className="w-full h-full object-cover object-[78%_center] lg:object-center select-none"
-            style={{ imageRendering: '-webkit-optimize-contrast' }}
-          />
-        </picture>
+        {/* Master 4K Ultra-HD Artwork Layer with High Real Clarity */}
+        <img 
+          src={heroUnifiedWebp} 
+          alt="EDGE Competitor Intel 4K Atmospheric Environment" 
+          loading="eager"
+          decoding="async"
+          className="absolute inset-0 w-full h-full object-cover object-[72%_center] lg:object-center select-none"
+          style={{ imageRendering: '-webkit-optimize-contrast' }}
+        />
 
-        {/* Deep Cobalt / Royal Violet Atmosphere & Diffused Backlight - Carefully calibrated for photographic realism */}
+        {/* Cinematic Environmental Balance - Clean legibility for left typography without masking screen clarity */}
         <div 
           className="absolute inset-0 pointer-events-none"
           style={{
             background: `
-              radial-gradient(ellipse 60% 60% at 20% 45%, rgba(45, 20, 150, 0.40) 0%, transparent 70%),
-              linear-gradient(to right, rgba(7, 3, 20, 0.88) 0%, rgba(7, 3, 20, 0.70) 35%, rgba(7, 3, 20, 0.25) 60%, transparent 100%),
-              linear-gradient(to bottom, rgba(6, 2, 16, 0.60) 0%, transparent 15%, transparent 85%, rgba(4, 2, 10, 0.85) 100%)
+              radial-gradient(ellipse 55% 65% at 22% 45%, rgba(60, 25, 175, 0.25) 0%, transparent 70%),
+              linear-gradient(to right, rgba(7, 3, 20, 0.75) 0%, rgba(7, 3, 20, 0.40) 40%, transparent 75%),
+              linear-gradient(to bottom, rgba(7, 3, 20, 0.50) 0%, transparent 15%, transparent 85%, rgba(7, 3, 20, 0.85) 100%)
             `
           }}
         />
 
-        {/* 35mm Photographic Film Texture & Micro Sensor Grain */}
-        <div 
-          className="absolute inset-0 opacity-[0.025] pointer-events-none"
-          style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0)`,
-            backgroundSize: '24px 24px'
-          }}
-        />
-
-        {/* Ambient Top Glow Line */}
+        {/* Subtle Ambient Top Glow Line */}
         <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-purple-400/40 to-transparent" />
       </div>
 
