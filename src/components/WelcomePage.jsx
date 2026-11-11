@@ -51,14 +51,13 @@ export function WelcomePage({ onExplore }) {
           style={{ imageRendering: '-webkit-optimize-contrast' }}
         />
 
-        {/* Cinematic Environmental Balance - Clean legibility for left typography without masking screen clarity */}
+        {/* Unified Cinematic Atmosphere - One cohesive, continuous environment across the full canvas */}
         <div 
           className="absolute inset-0 pointer-events-none"
           style={{
             background: `
-              radial-gradient(ellipse 55% 65% at 22% 45%, rgba(60, 25, 175, 0.25) 0%, transparent 70%),
-              linear-gradient(to right, rgba(7, 3, 20, 0.75) 0%, rgba(7, 3, 20, 0.40) 40%, transparent 75%),
-              linear-gradient(to bottom, rgba(7, 3, 20, 0.50) 0%, transparent 15%, transparent 85%, rgba(7, 3, 20, 0.85) 100%)
+              radial-gradient(ellipse 95% 85% at 50% 50%, transparent 40%, rgba(7, 3, 20, 0.40) 80%, rgba(7, 3, 20, 0.75) 100%),
+              linear-gradient(to bottom, rgba(6, 2, 16, 0.45) 0%, transparent 15%, transparent 85%, rgba(6, 2, 16, 0.75) 100%)
             `
           }}
         />
@@ -118,11 +117,11 @@ export function WelcomePage({ onExplore }) {
               ===================================================================== */}
           <div className="relative mb-6 sm:mb-8 select-text">
             
-            {/* Luminous Diffuse Glow / Volumetric Aura behind the typography */}
+            {/* Soft Ambient Diffuse Glow seamlessly blending into the environment (No localized ball) */}
             <div 
-              className="absolute -inset-6 sm:-inset-10 pointer-events-none opacity-85 blur-[60px] sm:blur-[85px]"
+              className="absolute -inset-10 pointer-events-none opacity-40 blur-[90px]"
               style={{
-                background: 'radial-gradient(ellipse at 35% 45%, rgba(255, 255, 255, 0.38) 0%, rgba(147, 51, 234, 0.38) 35%, rgba(88, 28, 135, 0.25) 65%, transparent 80%)'
+                background: 'radial-gradient(circle at 40% 50%, rgba(147, 51, 234, 0.35) 0%, rgba(88, 28, 135, 0.15) 50%, transparent 80%)'
               }}
               aria-hidden="true"
             />
