@@ -121,27 +121,18 @@ export function WelcomePage({ onExplore }) {
         <div className="max-w-4xl flex flex-col items-start text-left relative z-20">
           
           {/* =====================================================================
-              OVERSIZED TYPOGRAPHIC HERO STATEMENT (HIGH VISIBILITY & PROMINENCE)
+              OVERSIZED TYPOGRAPHIC HERO STATEMENT (HIGH CONTRAST & VISIBILITY)
               Two clearly separated words: COMPETITOR and INTEL (no period)
               ===================================================================== */}
           <div className="relative mb-6 sm:mb-8 select-text">
             
-            {/* Luminous Diffuse Glow / Volumetric Aura behind the typography */}
-            <div 
-              className="absolute -inset-6 sm:-inset-10 pointer-events-none opacity-85 blur-[60px] sm:blur-[85px]"
-              style={{
-                background: 'radial-gradient(ellipse at 35% 45%, rgba(255, 255, 255, 0.38) 0%, rgba(147, 51, 234, 0.38) 35%, rgba(88, 28, 135, 0.25) 65%, transparent 80%)'
-              }}
-              aria-hidden="true"
-            />
-
             <h1 className="relative font-display text-[28px] xs:text-[36px] sm:text-[54px] md:text-[68px] lg:text-[84px] xl:text-[96px] font-black tracking-[-0.01em] leading-none select-text flex flex-col gap-1.5 sm:gap-2.5 md:gap-3.5">
               
-              {/* Word 1: COMPETITOR (Matching INTEL's purple + white gradient treatment) */}
+              {/* Word 1: COMPETITOR (Solid, elegant purple gradient with strong contrast) */}
               <span 
-                className="block uppercase drop-shadow-[0_0_40px_rgba(168,85,247,0.50)]"
+                className="block uppercase"
                 style={{
-                  background: 'linear-gradient(180deg, #ffffff 15%, #d8b4fe 45%, #9333ea 85%, #6b21a8 100%)',
+                  background: 'linear-gradient(180deg, #ede4fc 0%, #caa1fd 35%, #a855f7 70%, #8b24cf 100%)',
                   WebkitBackgroundClip: 'text',
                   backgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
@@ -151,11 +142,11 @@ export function WelcomePage({ onExplore }) {
                 COMPETITOR
               </span>
 
-              {/* Word 2: INTEL (Clearly separated, unified purple + white gradient treatment) */}
+              {/* Word 2: INTEL (Solid, elegant purple gradient with strong contrast) */}
               <span 
-                className="block uppercase drop-shadow-[0_0_40px_rgba(168,85,247,0.50)]"
+                className="block uppercase"
                 style={{
-                  background: 'linear-gradient(180deg, #ffffff 15%, #d8b4fe 45%, #9333ea 85%, #6b21a8 100%)',
+                  background: 'linear-gradient(180deg, #ede4fc 0%, #caa1fd 35%, #a855f7 70%, #8b24cf 100%)',
                   WebkitBackgroundClip: 'text',
                   backgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
@@ -170,12 +161,12 @@ export function WelcomePage({ onExplore }) {
           </div>
 
           {/* =====================================================================
-              REFINED SUPPORTING TAGLINE (THIN, LIGHT, SPACIOUS & EDITORIAL)
-              Completely different, elegant typographic system from the heavy heading
+              REFINED SUPPORTING TAGLINE (HIGH CONTRAST & IMMEDIATE LEGIBILITY)
+              Preserving original typography, font sizes, spacing, and styling
               ===================================================================== */}
-          <p className="font-sans font-light text-base sm:text-lg md:text-xl text-purple-200/80 tracking-[0.035em] mb-8 sm:mb-11 max-w-xl leading-relaxed">
+          <p className="font-sans font-light text-base sm:text-lg md:text-xl text-white tracking-[0.035em] mb-8 sm:mb-11 max-w-xl leading-relaxed">
             <span>Know Your Competition. </span>
-            <span className="text-purple-300/90 font-normal">See Beyond the Market.</span>
+            <span className="text-purple-100 font-normal">See Beyond the Market.</span>
           </p>
 
           {/* =====================================================================
